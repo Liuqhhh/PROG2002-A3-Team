@@ -951,3 +951,196 @@ progress::-webkit-progress-value {
     }
 }
 
+/* Registration Page Specific Styles */
+.registration-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+    width: 90%;
+}
+
+@media (max-width: 768px) {
+    .registration-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+
+.registration-container .event-details {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.registration-container .event-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.registration-container .event-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.registration-container .event-header h3 {
+    color: #1e40af;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.registration-container .event-meta {
+    margin-bottom: 1.5rem;
+}
+
+.registration-container .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.registration-container .info-item:last-child {
+    border-bottom: none;
+}
+
+.registration-container .info-item strong {
+    color: #374151;
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.registration-container .info-item span {
+    color: #1e40af;
+    text-align: right;
+    font-weight: 500;
+}
+
+.registration-container .ticket-price {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.registration-container .event-description {
+    background: #f8fafc;
+    padding: 1.25rem;
+    border-radius: 8px;
+    border-left: 4px solid #2563eb;
+    margin-top: 1rem;
+}
+
+.registration-container .event-description p {
+    margin: 0;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+
+.registration-container .search-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border: 2px solid #e5e7eb;
+}
+
+.registration-container .search-form h3 {
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+
+.registration-container .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.registration-container .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.registration-container .form-group input,
+.registration-container .form-group select,
+.registration-container .form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.registration-container .form-group input:focus,
+.registration-container .form-group select:focus,
+.registration-container .form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.registration-container .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.registration-container .form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+    .registration-container .form-buttons {
+        flex-direction: column;
+    }
+    
+    .registration-container .form-buttons .btn {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+
+.registration-container + .success-message {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin: 2rem auto;
+    max-width: 800px;
+    width: 90%;
+    text-align: center;
+    border-left: 5px solid #10b981;
+}
+
+.registration-container + .success-message h3 {
+    color: #065f46;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.registration-container + .success-message p {
+    color: #047857;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+
+.required-field::after {
+    content: " *";
+    color: #ef4444;
+}

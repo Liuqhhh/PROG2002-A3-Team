@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Registration - Charity Events</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
     <nav>
         <div class="nav-container">
-            <h1>Charity Events</h1>
+            <h1>🤝 Charity Events</h1>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="search.html">Search Events</a></li>
@@ -17,42 +18,49 @@
         </div>
     </nav>
 
-    <main class="registration-container">
-        <div class="event-details">
-            <div class="event-header">
-                <h2 id="eventTitle">Event Registration</h2>
-                <div class="event-meta">
-                    <span class="event-category" id="eventCategory">Registration</span>
-                </div>
-            </div>
+    <main>
 
-            <!-- Event Information Section -->
-            <section class="info-section">
-                <h3>Event Information</h3>
-                <div class="info-grid">
+        <section class="search-form">
+            <h2>Event Registration</h2>
+            <p>Complete your registration for the charity event</p>
+        </section>
+
+        <div class="registration-container">
+
+            <div class="event-details">
+                <div class="event-header">
+                    <h3>Event Information</h3>
+                </div>
+                
+                <div class="event-meta">
                     <div class="info-item">
                         <strong>Event Name:</strong>
-                        <span id="eventName">Loading...</span>
+                        <span>Charity Gala Dinner</span>
                     </div>
                     <div class="info-item">
-                        <strong>Date:</strong>
-                        <span id="eventDate">-</span>
+                        <strong>Date & Time:</strong>
+                        <span>December 15, 2024 at 18:30</span>
                     </div>
                     <div class="info-item">
                         <strong>Location:</strong>
-                        <span id="eventLocation">-</span>
+                        <span>City Center International Convention Center</span>
                     </div>
                     <div class="info-item">
-                        <strong>Description:</strong>
-                        <span id="eventDescription">-</span>
+                        <strong>Ticket Price:</strong>
+                        <span class="ticket-price">$150.00</span>
                     </div>
                 </div>
-            </section>
+                
+                <div class="event-description">
+                    <p>Annual charity fundraising dinner featuring auctions and performances to support children's education. All proceeds will be donated to the Children's Education Foundation to provide learning resources and scholarships for underprivileged students.</p>
+                </div>
+            </div>
 
-            <!-- Registration Form -->
-            <section class="info-section">
+
+            <div class="search-form">
                 <h3>Registration Form</h3>
-                <form id="registrationForm" class="search-form">
+                
+                <form id="registrationForm">
                     <div class="form-group">
                         <label for="fullName">Full Name *</label>
                         <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
@@ -72,11 +80,11 @@
                         <label for="ticketCount">Number of Tickets *</label>
                         <select id="ticketCount" name="ticketCount" required>
                             <option value="">Please select</option>
-                            <option value="1">1 Ticket</option>
-                            <option value="2">2 Tickets</option>
-                            <option value="3">3 Tickets</option>
-                            <option value="4">4 Tickets</option>
-                            <option value="5">5 Tickets</option>
+                            <option value="1">1 Ticket - $150.00</option>
+                            <option value="2">2 Tickets - $300.00</option>
+                            <option value="3">3 Tickets - $450.00</option>
+                            <option value="4">4 Tickets - $600.00</option>
+                            <option value="5">5 Tickets - $750.00</option>
                         </select>
                     </div>
 
@@ -86,23 +94,26 @@
                     </div>
 
                     <div class="form-buttons">
-                        <button type="submit" class="btn">Submit Registration</button>
-                        <button type="button" class="btn btn-secondary" onclick="goBack()">Go Back</button>
+                        <button type="submit" class="btn">🎟️ Submit Registration</button>
+                        <button type="button" class="btn btn-secondary" onclick="goBack()">← Go Back</button>
                     </div>
                 </form>
-            </section>
+            </div>
+        </div>
 
-            <!-- Success Message -->
-            <div id="successMessage" class="success-message" style="display: none;">
-                <h3>🎉 Registration Successful!</h3>
-                <p>Thank you for your registration. We have received your application and will contact you soon with further details.</p>
-                <div class="form-buttons">
-                    <button onclick="goToHome()" class="btn">Return to Homepage</button>
-                </div>
+
+        <div id="successMessage" class="success-message" style="display: none;">
+            <h3>🎉 Registration Successful!</h3>
+            <p>Thank you for registering for the Charity Gala Dinner. We've sent a confirmation email to your address.</p>
+            <p><strong>Date:</strong> December 15, 2024 at 18:30</p>
+            <p><strong>Location:</strong> City Center International Convention Center</p>
+            <div class="form-buttons">
+                <button onclick="goToHome()" class="btn">Return to Homepage</button>
+                <button onclick="goToSearch()" class="btn btn-secondary">Find More Events</button>
             </div>
         </div>
     </main>
 
-    <script src="js/registration.js"></script>
+    <script src="/js/registration.js"></script>
 </body>
 </html>
