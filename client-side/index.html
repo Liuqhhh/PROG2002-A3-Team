@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity Events - Home</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1>🤝 Charity Events</h1>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="search.html">Search</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h2>Make a Difference Together</h2>
+            <p>Join our charity events and support meaningful causes in your community. Every participation counts!</p>
+        </section>
+
+        <section class="organization-info">
+            <h3>About Our Organization</h3>
+            <p>We are a non-profit organization dedicated to creating positive change through community events and fundraising activities. Our mission is to connect people with causes they care about and make giving back an enjoyable experience.</p>
+            <div class="contact-info">
+                <p><strong>📍 Address:</strong> 123 Charity Street, Community City</p>
+                <p><strong>📞 Phone:</strong> (555) 123-4567</p>
+                <p><strong>✉️ Email:</strong> contact@charityevents.org</p>
+                <p><strong>🌐 Website:</strong> www.charityevents.org</p>
+            </div>
+        </section>
+
+        <section class="events-section">
+            <h3>Upcoming Charity Events</h3>
+            <div id="event-list" class="events-grid">
+                <div class="loading">Loading events...</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 获取事件数据并显示
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events/home');
+                const result = await response.json();
+                
+                const container = document.getElementById('event-list');
+                
+                if (result.success && result.data.length > 0) {
+                    // 有事件数据，显示事件卡片
+                    container.innerHTML = result.data.map(event => `
+                        <div class="event-card">
+                            <h4>${event.name}</h4>
+                            <p><strong>Date:</strong> ${new Date(event.date).toLocaleDateString('en-US', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            })}</p>
+                            <p><strong>Time:</strong> ${new Date(event.date).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}</p>
+                            <p><strong>Location:</strong> ${event.location}</p>
+                            <p><strong>Category:</strong> ${event.category_name}</p>
+                            <p>${event.description}</p>
+                            <p class="ticket-price"><strong>Ticket Price:</strong> $${event.ticket_price}</p>
+                            <p class="fundraising-goal"><strong>Fundraising Goal:</strong> $${event.goal_amount} | <strong>Raised:</strong> $${event.progress_amount}</p>
+                            <a href="/event-details.html?id=${event.id}" class="view-details-btn">View Details</a>
+                        </div>
+                    `).join('');
+                } else {
+                    // 没有事件数据
+                    container.innerHTML = `
+                        <div class="no-events">
+                            <p><strong>No Upcoming Events</strong></p>
+                            <p>There are currently no upcoming charity events. Please check back later for new events!</p>
+                            <p>You can also check our <a href="/search.html">search page</a> for all events.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('event-list').innerHTML = `
+                    <div class="error-message">
+                        <p>Error loading events. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载时获取事件数据
+        document.addEventListener('DOMContentLoaded', loadEvents);
+    </script>
+</body>
+</html>
