@@ -1,4 +1,4 @@
-// registration.js - Enhanced version for consistent design
+// registration.js - Enhanced version with complete navigation
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🎟️ Registration page initialized');
     
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Get event ID from URL parameters
 function getEventIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('eventId') || '1'; // Default to 1 for demo
+    return urlParams.get('eventId') || 'test';
 }
 
 // Load event information
@@ -20,20 +20,19 @@ function loadEventInfo() {
     const eventId = getEventIdFromURL();
     console.log('Loading event info for ID:', eventId);
     
-    // Mock event data - replace with actual API call
-    const mockEvent = {
+
+    const testEvent = {
         id: eventId,
-        name: "Charity Gala Dinner 2024",
-        date: "2024-12-15T18:30:00",
-        location: "City Center International Convention Center",
-        description: "Annual charity fundraising dinner featuring auctions and performances to support children's education. All proceeds will be donated to the Children's Education Foundation to provide learning resources and scholarships for underprivileged students.",
-        ticketPrice: 150,
-        category: "Gala Dinner",
-        purpose: "Supporting children's education through fundraising"
+        name: "慈善活动示例",
+        date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30天后
+        location: "活动地点待定",
+        description: "这是一个测试活动，用于演示报名页面功能。实际活动信息将在后端完成后显示。",
+        ticketPrice: 100,
+        category: "测试活动",
+        purpose: "演示慈善活动报名流程"
     };
 
-    // Update the UI with event information
-    updateEventUI(mockEvent);
+    updateEventUI(testEvent);
 }
 
 // Update event information in the UI
@@ -314,7 +313,7 @@ function submitRegistration() {
     
     console.log('📧 Submitting registration data:', formData);
     
-    // Simulate API call - replace with actual fetch in production
+    // Simulate API call
     simulateAPICall(formData)
         .then(result => {
             showSuccessMessage(result);
@@ -383,10 +382,13 @@ function showSuccessMessage(result) {
                 <p><strong>Confirmation ID:</strong> ${result.registrationId}</p>
             </div>
             <p><em>Please bring your confirmation ID and a valid ID to the event.</em></p>
+            
             <div class="form-buttons">
                 <button onclick="goToHome()" class="btn">🏠 Return to Homepage</button>
-                <button onclick="goToSearch()" class="btn btn-secondary">🔍 Find More Events</button>
-                <button onclick="printConfirmation()" class="btn btn-secondary">🖨️ Print Confirmation</button>
+                <button onclick="browseAllEvents()" class="btn btn-secondary">🔍 Browse All Events</button>
+                <button onclick="goBackToEvent()" class="btn btn-secondary">📅 Back to Event Details</button>
+                <button onclick="shareEvent()" class="btn btn-secondary">📤 Share this Event</button>
+                <button onclick="contactSupport()" class="btn btn-secondary">📞 Contact Support</button>
             </div>
         `;
     }
@@ -395,17 +397,70 @@ function showSuccessMessage(result) {
     console.log('✅ Registration successful:', result);
 }
 
+// Enhanced Navigation Functions
+function goBack() {
+    window.history.back();
+}
+
+function goToHome() {
+    window.location.href = 'index.html';
+}
+
+function goToSearch() {
+    window.location.href = 'search.html';
+}
+
+// New Navigation Functions
+function goBackToEvent() {
+    const eventId = getEventIdFromURL();
+    if (eventId && eventId !== 'test') {
+        window.location.href = `event-details.html?eventId=${eventId}`;
+    } else {
+
+        goToHome();
+    }
+}
+
+function browseAllEvents() {
+    window.location.href = 'search.html';
+}
+
+function contactSupport() {
+    alert('请联系支持团队: support@charityevents.org\n电话: (555) 123-4567');
+}
+
+function shareEvent() {
+    const eventName = document.querySelector('.event-details .info-item:nth-child(1) span')?.textContent || '慈善活动';
+    const eventDate = document.querySelector('.event-details .info-item:nth-child(2) span')?.textContent || '';
+    
+    const shareText = `我正在参加 "${eventName}" ${eventDate}。一起来支持这个有意义的慈善活动吧！`;
+    
+    if (navigator.share) {
+
+        navigator.share({
+            title: eventName,
+            text: shareText,
+            url: window.location.href
+        });
+    } else {
+
+        prompt('复制以下链接分享给朋友:', window.location.href);
+    }
+}
+
+function printConfirmation() {
+    window.print();
+}
+
 // Utility functions
 function calculateTotalAmount() {
     const ticketCount = parseInt(document.getElementById('ticketCount').value) || 0;
-    const basePrice = 150; // This should come from event data
+    const basePrice = 100; 
     return ticketCount * basePrice;
 }
 
 function updateTotalAmount() {
     const totalAmount = calculateTotalAmount();
-    // You could display this somewhere in the UI if needed
-    console.log('Total amount:', totalAmount);
     return totalAmount;
 }
 
@@ -431,23 +486,6 @@ function formatCurrency(amount) {
         style: 'currency',
         currency: 'USD'
     }).format(amount);
-}
-
-// Navigation functions
-function goBack() {
-    window.history.back();
-}
-
-function goToHome() {
-    window.location.href = 'index.html';
-}
-
-function goToSearch() {
-    window.location.href = 'search.html';
-}
-
-function printConfirmation() {
-    window.print();
 }
 
 // Add CSS for error states if not already in style.css
