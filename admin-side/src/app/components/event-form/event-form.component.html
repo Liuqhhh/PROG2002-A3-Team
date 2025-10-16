@@ -1,1 +1,63 @@
-<p>event-form works!</p>
+<div class="container mt-4">
+  <h2>{{ isEdit ? '编辑活动' : '新增活动' }}</h2>
+  
+  <form (ngSubmit)="onSubmit()" class="mt-3">
+    <div class="mb-3">
+      <label class="form-label">活动标题</label>
+      <input type="text" class="form-control" [(ngModel)]="event.title" name="title" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">活动描述</label>
+      <textarea class="form-control" [(ngModel)]="event.description" name="description" rows="3" required></textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">日期</label>
+        <input type="date" class="form-control" [(ngModel)]="event.date" name="date" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">时间</label>
+        <input type="time" class="form-control" [(ngModel)]="event.time" name="time" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">地点</label>
+      <input type="text" class="form-control" [(ngModel)]="event.location" name="location" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">分类</label>
+      <input type="text" class="form-control" [(ngModel)]="event.category" name="category" required>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">票价 ($)</label>
+        <input type="number" class="form-control" [(ngModel)]="event.price" name="price" min="0" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">可用票数</label>
+        <input type="number" class="form-control" [(ngModel)]="event.available_tickets" name="available_tickets" min="0" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">状态</label>
+      <select class="form-control" [(ngModel)]="event.status" name="status">
+        <option value="active">进行中</option>
+        <option value="past">已结束</option>
+        <option value="suspended">已暂停</option>
+      </select>
+    </div>
+
+    <div class="btn-group">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? '保存中...' : (isEdit ? '更新' : '创建') }}
+      </button>
+      <button type="button" class="btn btn-secondary" routerLink="/events">取消</button>
+    </div>
+  </form>
+</div>
