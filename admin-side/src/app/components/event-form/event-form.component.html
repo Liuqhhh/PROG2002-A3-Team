@@ -1,7 +1,11 @@
 <div class="container mt-4">
   <h2>{{ isEdit ? '编辑活动' : '新增活动' }}</h2>
   
-  <form (ngSubmit)="onSubmit()" class="mt-3">
+  <div *ngIf="loading" class="alert alert-info">
+    正在加载活动数据...
+  </div>
+  
+  <form (ngSubmit)="onSubmit()" class="mt-3" *ngIf="!loading">
     <div class="mb-3">
       <label class="form-label">活动标题</label>
       <input type="text" class="form-control" [(ngModel)]="event.title" name="title" required>
@@ -58,6 +62,16 @@
         {{ loading ? '保存中...' : (isEdit ? '更新' : '创建') }}
       </button>
       <button type="button" class="btn btn-secondary" routerLink="/events">取消</button>
+      
+      <!-- 测试按钮 -->
+      <button *ngIf="isEdit" type="button" class="btn btn-info" 
+              (click)="testMinimalUpdate()" [disabled]="loading">
+        测试更新
+      </button>
+      <button *ngIf="isEdit" type="button" class="btn btn-warning" 
+              (click)="testTitleUpdate()" [disabled]="loading">
+        只更新标题
+      </button>
     </div>
   </form>
 </div>

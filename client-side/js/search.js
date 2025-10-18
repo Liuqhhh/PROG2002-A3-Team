@@ -11,24 +11,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     categorySelect.innerHTML = '<option value="">Loading categories...</option>';
     
     try {
-        const categoriesResponse = await fetch('/api/categories');
-        const categoriesData = await categoriesResponse.json();
+        const categoriesData = await callAPI('/categories');
         
-        if (categoriesData && categoriesData.success) {
+        if (categoriesData && Array.isArray(categoriesData) && categoriesData.length > 0) {
+            const categories = categoriesData;
+            categorySelect.innerHTML = '<option value="">All Categories</option>' +
+                categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
+        } else if (categoriesData && categoriesData.success && categoriesData.data) {
             const categories = categoriesData.data;
             categorySelect.innerHTML = '<option value="">All Categories</option>' +
                 categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
-            
-            resultsContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem; color: #666;">
-                    <h3>Ready to Search</h3>
-                    <p>Use the search form above to find charity events that match your interests.</p>
-                    <p>You can filter by category, location, or specific date.</p>
-                </div>
-            `;
         } else {
             throw new Error('Failed to load categories');
         }
+        
+        // 初始加载时显示所有事件
+        await performSearch();
+        
     } catch (error) {
         console.error('Error loading categories:', error);
         categorySelect.innerHTML = '<option value="">Failed to load categories</option>';
@@ -44,18 +43,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Clear button
     clearButton.addEventListener('click', () => {
         searchForm.reset();
-        resultsContainer.innerHTML = `
-            <div style="text-align: center; padding: 2rem; color: #666;">
-                <h3>Filters Cleared</h3>
-                <p>Use the search form above to find charity events.</p>
-            </div>
-        `;
+        performSearch(); // 清空后显示所有事件
     });
 });
 
 async function performSearch() {
     const formData = new FormData(document.getElementById('search-form'));
-    const params = new URLSearchParams();
     const resultsContainer = document.getElementById('search-results');
     
     // Collect form data
@@ -63,12 +56,6 @@ async function performSearch() {
     const location = document.getElementById('location').value;
     const date = document.getElementById('date').value;
     
-    // Build query parameters
-    if (category) params.append('category', category);
-    if (location) params.append('location', location);
-    if (date) params.append('date', date);
-
-    const queryString = params.toString();
     console.log('🔍 Search parameters:', { category, location, date });
     
     // Show loading state
@@ -80,15 +67,35 @@ async function performSearch() {
     `;
     
     try {
-
-        const response = await fetch(`/api/events/search?${queryString}`);
-        const responseData = await response.json();
+        const responseData = await callAPI('/events');
         
-        if (responseData && responseData.success) {
-            const events = responseData.data;
+        if (responseData && Array.isArray(responseData)) {
+            let events = responseData;
+            
+            // 客户端过滤
+            if (category) {
+                events = events.filter(event => 
+                    event.category_name === category || 
+                    event.category === category
+                );
+            }
+            
+            if (location) {
+                events = events.filter(event => 
+                    event.location.toLowerCase().includes(location.toLowerCase())
+                );
+            }
+            
+            if (date) {
+                const filterDate = new Date(date).toDateString();
+                events = events.filter(event => 
+                    new Date(event.date).toDateString() === filterDate
+                );
+            }
+            
             displaySearchResults(events, resultsContainer, { category, location, date });
         } else {
-            throw new Error('Search request failed');
+            throw new Error('Invalid response format');
         }
     } catch (error) {
         console.error('Search error:', error);
@@ -135,8 +142,8 @@ function createEventCard(event) {
     return `
         <div class="event-card">
             <div class="event-header">
-                <h3><a href="event-details.html?eventId=${event.id}">${event.name}</a></h3>
-                <span class="event-category">${event.category_name}</span>
+                <h3><a href="event-details.html?id=${event.id}">${event.name}</a></h3>
+                <span class="event-category">${event.category_name || event.category || 'General'}</span>
             </div>
             
             <div class="event-info">
@@ -146,24 +153,19 @@ function createEventCard(event) {
             </div>
             
             <div class="event-purpose">
-                <p><strong>🎯 Purpose:</strong> ${event.purpose}</p>
+                <p><strong>🎯 Purpose:</strong> ${event.purpose || 'Supporting charitable causes'}</p>
             </div>
             
             <div class="event-description">
-                <p>${event.description}</p>
-            </div>
-            
-            <div class="fundraising-progress">
-                <p><strong>💰 Fundraising:</strong> ${formatCurrency(event.progress_amount || 0)} of ${formatCurrency(event.goal_amount || 0)}</p>
+                <p>${event.description || 'No description available'}</p>
             </div>
             
             <div class="event-actions">
-                <a href="event-details.html?eventId=${event.id}" class="btn">View Details & Register</a>
+                <a href="event-details.html?id=${event.id}" class="btn">View Details & Register</a>
             </div>
         </div>
     `;
 }
-
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -176,6 +178,7 @@ function formatDate(dateString) {
 }
 
 function formatCurrency(amount) {
+    if (amount === 0 || amount === null) return 'Free';
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
@@ -190,29 +193,3 @@ function getFilterSummary(filters) {
     
     return activeFilters.length > 0 ? `(${activeFilters.join(', ')})` : '';
 }
-
-// Add search-specific CSS
-const searchStyle = document.createElement('style');
-searchStyle.textContent = `
-    .search-summary {
-        margin-bottom: 2rem;
-        padding: 1rem;
-        background: #f8fafc;
-        border-radius: 8px;
-        border-left: 4px solid #2563eb;
-    }
-    
-    .search-summary h4 {
-        color: #374151;
-        margin: 0;
-    }
-    
-    .fundraising-progress {
-        margin: 1rem 0;
-        padding: 0.75rem;
-        background: #f0fdf4;
-        border-radius: 6px;
-        border-left: 3px solid #10b981;
-    }
-`;
-document.head.appendChild(searchStyle);

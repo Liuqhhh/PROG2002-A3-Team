@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Registration - Charity Events</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 
@@ -13,7 +13,8 @@
             <h1>🤝 Charity Events</h1>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="search.html">Search Events</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="registration.html" class="active">Register</a></li>
             </ul>
         </div>
     </nav>
@@ -35,24 +36,24 @@
                 <div class="event-meta">
                     <div class="info-item">
                         <strong>Event Name:</strong>
-                        <span>Charity Gala Dinner</span>
+                        <span id="event-name">Loading...</span>
                     </div>
                     <div class="info-item">
                         <strong>Date & Time:</strong>
-                        <span>December 15, 2024 at 18:30</span>
+                        <span id="event-date">Loading...</span>
                     </div>
                     <div class="info-item">
                         <strong>Location:</strong>
-                        <span>City Center International Convention Center</span>
+                        <span id="event-location">Loading...</span>
                     </div>
                     <div class="info-item">
                         <strong>Ticket Price:</strong>
-                        <span class="ticket-price">$150.00</span>
+                        <span class="ticket-price" id="event-price">$0.00</span>
                     </div>
                 </div>
                 
                 <div class="event-description">
-                    <p>Annual charity fundraising dinner featuring auctions and performances to support children's education. All proceeds will be donated to the Children's Education Foundation to provide learning resources and scholarships for underprivileged students.</p>
+                    <p id="event-description">Loading event description...</p>
                 </div>
             </div>
 
@@ -80,11 +81,11 @@
                         <label for="ticketCount">Number of Tickets *</label>
                         <select id="ticketCount" name="ticketCount" required>
                             <option value="">Please select</option>
-                            <option value="1">1 Ticket - $150.00</option>
-                            <option value="2">2 Tickets - $300.00</option>
-                            <option value="3">3 Tickets - $450.00</option>
-                            <option value="4">4 Tickets - $600.00</option>
-                            <option value="5">5 Tickets - $750.00</option>
+                            <option value="1">1 Ticket</option>
+                            <option value="2">2 Tickets</option>
+                            <option value="3">3 Tickets</option>
+                            <option value="4">4 Tickets</option>
+                            <option value="5">5 Tickets</option>
                         </select>
                     </div>
 
@@ -93,11 +94,14 @@
                         <textarea id="specialRequirements" name="specialRequirements" rows="3" placeholder="Please mention any dietary restrictions or special needs"></textarea>
                     </div>
 
+                    <div class="total-amount">
+                        <strong>Total Amount: $<span id="total-amount">0.00</span></strong>
+                    </div>
+
                     <div class="form-buttons">
                         <button type="submit" class="btn">🎟️ Submit Registration</button>
                         <button type="button" class="btn btn-secondary" onclick="goBackToEvent()">← Back to Event</button>
                         <button type="button" class="btn btn-secondary" onclick="goToHome()">🏠 Homepage</button>
-                        <button type="button" class="btn btn-secondary" onclick="browseAllEvents()">🔍 Browse Events</button>
                     </div>
                 </form>
             </div>
@@ -106,9 +110,8 @@
 
         <div id="successMessage" class="success-message" style="display: none;">
             <h3>🎉 Registration Successful!</h3>
-            <p>Thank you for registering for the Charity Gala Dinner. We've sent a confirmation email to your address.</p>
-            <p><strong>Date:</strong> December 15, 2024 at 18:30</p>
-            <p><strong>Location:</strong> City Center International Convention Center</p>
+            <p>Thank you for registering! We've sent a confirmation email to your address.</p>
+            <div id="registration-details"></div>
             <div class="form-buttons">
                 <button onclick="goToHome()" class="btn">Return to Homepage</button>
                 <button onclick="goToSearch()" class="btn btn-secondary">Find More Events</button>
@@ -116,6 +119,6 @@
         </div>
     </main>
 
-    <script src="/js/registration.js"></script>
+    <script src="./js/registration.js"></script>
 </body>
 </html>

@@ -1,22 +1,52 @@
-// js/main.js
-const API_BASE_URL = 'http://localhost:3000/api';
+// main.js
+const API_BASE_URL = 'https://f3ce1f1f7e196724bc049b8111b70e55.serveo.net/api';
 
-// General function: fetch data
-async function fetchData(endpoint) {
+
+async function callAPI(endpoint, options = {}) {
     try {
-        console.log(`🔄 Fetching data: ${API_BASE_URL}${endpoint}`);
-        const response = await fetch(`${API_BASE_URL}${endpoint}`);
+        console.log(`🔄 Calling API: ${API_BASE_URL}${endpoint}`);
+        
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            },
+            ...options
+        });
+        
+        console.log(`Response status: ${response.status}`);
+        
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('API error response:', errorText);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
         const data = await response.json();
-        console.log(`✅ Data fetched successfully from ${endpoint}`);
+        console.log(`✅ API call successful: ${endpoint}`, data);
         return data;
     } catch (error) {
-        console.error('❌ Failed to fetch data:', error);
-        showError('Failed to load data. Please make sure the server is running on http://localhost:3000');
+        console.error('❌ API call failed:', error);
+        showError(`API调用失败: ${error.message}`);
         return null;
     }
+}
+
+
+async function testAPIConnection() {
+    try {
+        console.log('Testing API connection...');
+        const response = await callAPI('/');
+        return response !== null;
+    } catch (error) {
+        console.error('API connection test failed:', error);
+        return false;
+    }
+}
+
+
+async function fetchData(endpoint) {
+    return await callAPI(endpoint);
 }
 
 // Display error message
@@ -108,4 +138,16 @@ async function checkServerConnection() {
 function getUrlParameter(name) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(name);
+}
+
+function showLoading() {
+    const eventDetails = document.getElementById('event-details');
+    if (eventDetails) {
+        eventDetails.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading event details...</p>
+            </div>
+        `;
+    }
 }

@@ -12,7 +12,7 @@ body {
     background-color: #ffffff;
 }
 
-
+/* Navigation */
 nav {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     color: white;
@@ -106,6 +106,19 @@ main {
     color: #4b5563;
 }
 
+.contact-info {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #2563eb;
+}
+
+.contact-info p {
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+}
+
 /* Events section */
 .events-section {
     background: white;
@@ -150,10 +163,13 @@ main {
     font-size: 1.3rem;
 }
 
-.event-card h5 {
+.event-card h4 a {
     color: #1e40af;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
+    text-decoration: none;
+}
+
+.event-card h4 a:hover {
+    color: #2563eb;
 }
 
 .event-card p {
@@ -180,6 +196,12 @@ main {
     text-align: center;
 }
 
+.search-form h3 {
+    color: #1e40af;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -191,19 +213,25 @@ main {
     color: #374151;
 }
 
-.form-group input, .form-group select {
+.form-group input, .form-group select, .form-group textarea {
     width: 100%;
     padding: 0.75rem;
     border: 2px solid #e5e7eb;
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
+    font-family: inherit;
 }
 
-.form-group input:focus, .form-group select:focus {
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
 /* Buttons */
@@ -240,6 +268,7 @@ main {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    margin-top: 1.5rem;
 }
 
 /* Search results */
@@ -321,15 +350,17 @@ progress::-webkit-progress-value {
     border-radius: 8px;
     margin: 1rem 0;
     border-left: 4px solid #dc2626;
+    text-align: center;
 }
 
 .success-message {
     background: #d1fae5;
     color: #065f46;
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-    border-left: 4px solid #10b981;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    border-left: 5px solid #10b981;
+    text-align: center;
 }
 
 .loading {
@@ -339,94 +370,7 @@ progress::-webkit-progress-value {
     font-size: 1.1rem;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .nav-container {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    nav ul {
-        gap: 1rem;
-    }
-    
-    .hero h2 {
-        font-size: 2rem;
-    }
-    
-    .events-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    main {
-        width: 95%;
-    }
-    
-    .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-    
-    .form-buttons {
-        flex-direction: column;
-    }
-}
-
 /* Home page specific styles */
-.contact-info {
-    margin-top: 1.5rem;
-    padding: 1.5rem;
-    background: #f8fafc;
-    border-radius: 8px;
-    border-left: 4px solid #2563eb;
-}
-
-.contact-info p {
-    margin-bottom: 0.5rem;
-    padding: 0.25rem 0;
-}
-
-/* Event card enhancements */
-.event-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.event-category {
-    background: #dbeafe;
-    color: #1e40af;
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.event-info {
-    margin-bottom: 1rem;
-}
-
-.event-purpose {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    background: #f0f9ff;
-    border-radius: 8px;
-    border-left: 3px solid #0ea5e9;
-}
-
-.event-description {
-    margin-bottom: 1.5rem;
-    color: #6b7280;
-    line-height: 1.5;
-}
-
-.event-actions {
-    text-align: center;
-}
-
-/* Search page specific styles */
 .search-placeholder {
     text-align: center;
     padding: 2rem;
@@ -480,169 +424,48 @@ progress::-webkit-progress-value {
     100% { transform: rotate(360deg); }
 }
 
-.event-hero {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid #e5e7eb;
-}
-
-.event-category-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    color: white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 25px;
-    font-weight: 600;
-    margin-top: 1rem;
-}
-
-.event-meta-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin: 2rem 0;
-}
-
-.meta-item {
-    background: #f8fafc;
-    padding: 1.5rem;
-    border-radius: 10px;
-    text-align: center;
-    border-left: 4px solid #2563eb;
-}
-
-.meta-item strong {
-    display: block;
-    color: #374151;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.meta-item p {
-    color: #1e40af;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.progress-container {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    border: 2px solid #e5e7eb;
-}
-
-.progress-labels {
+.event-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #374151;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
-.event-cta {
-    text-align: center;
-    padding: 2rem;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+.event-category {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 0.25rem 0.75rem;
     border-radius: 15px;
-    margin-top: 2rem;
-    border: 2px solid #bae6fd;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
-.event-cta h3 {
-    color: #0369a1;
+.event-info {
     margin-bottom: 1rem;
 }
 
-.registration-section {
-    text-align: center;
-    margin: 2rem 0;
+.event-purpose {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #f0f9ff;
+    border-radius: 8px;
+    border-left: 3px solid #0ea5e9;
 }
 
-.register-btn {
-    font-size: 1.1rem;
-    padding: 1rem 2.5rem;
-}
-
-.registration-note {
-    margin-top: 1rem;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.navigation-actions {
-    text-align: center;
-    margin-top: 3rem;
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* New styles for dynamic content */
-.ticket-price {
-    font-weight: bold;
-    color: #e74c3c;
-}
-
-.fundraising-goal {
-    color: #27ae60;
-}
-
-.view-details-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 16px;
-    background: #3498db;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-.view-details-btn:hover {
-    background: #2980b9;
-}
-
-.no-events {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    grid-column: 1 / -1;
-}
-
-.results-header {
+.event-description {
     margin-bottom: 1.5rem;
+    color: #6b7280;
+    line-height: 1.5;
 }
 
-.results-header h4 {
-    color: #374151;
-    font-size: 1.2rem;
-}
-
-.no-results {
+.event-actions {
     text-align: center;
-    padding: 3rem;
-    color: #666;
 }
 
-.no-results h4 {
-    color: #374151;
-    margin-bottom: 1rem;
-}
-/* Event Details Page Styles */
-.event-details {
+/* Event Details Specific Styles */
+.event-details-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-}
-
-.event-header {
-    text-align: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #e0e0e0;
 }
 
 .event-header h2 {
@@ -656,14 +479,6 @@ progress::-webkit-progress-value {
     justify-content: center;
     gap: 15px;
     flex-wrap: wrap;
-}
-
-.event-category {
-    background: #3498db;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.9em;
 }
 
 .event-status {
@@ -831,27 +646,7 @@ progress::-webkit-progress-value {
     margin-top: 30px;
 }
 
-/* Loading and Error States */
-.loading-state {
-    text-align: center;
-    padding: 50px;
-}
-
-.loading-spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
-    margin: 0 auto 20px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
+/* Error States */
 .error-state {
     text-align: center;
     padding: 50px;
@@ -867,91 +662,7 @@ progress::-webkit-progress-value {
     justify-content: center;
 }
 
-/* Modal Styles */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .event-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .event-header h2 {
-        font-size: 2em;
-    }
-    
-    .info-item {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .navigation-actions {
-        flex-direction: column;
-    }
-}
-/* Responsive design enhancements */
-@media (max-width: 768px) {
-    .event-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .event-meta-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .navigation-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .navigation-actions .btn {
-        width: 100%;
-        max-width: 300px;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero h2 {
-        font-size: 1.8rem;
-    }
-    
-    .events-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-buttons {
-        flex-direction: column;
-    }
-    
-    .form-buttons .btn {
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-}
-
-/* Registration Page Specific Styles */
+/* Registration Page Styles */
 .registration-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -960,14 +671,6 @@ progress::-webkit-progress-value {
     max-width: 1200px;
     width: 90%;
 }
-
-@media (max-width: 768px) {
-    .registration-container {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-}
-
 
 .registration-container .event-details {
     background: white;
@@ -1043,7 +746,6 @@ progress::-webkit-progress-value {
     line-height: 1.6;
 }
 
-
 .registration-container .search-form {
     background: white;
     padding: 2rem;
@@ -1052,110 +754,146 @@ progress::-webkit-progress-value {
     border: 2px solid #e5e7eb;
 }
 
-.registration-container .search-form h3 {
-    color: #1e40af;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
+.total-amount {
+    background: #f0f9ff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    text-align: center;
+    border-left: 4px solid #0ea5e9;
+    font-size: 1.2rem;
+}
+
+/* Form error styles */
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-error-message {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    border-left: 4px solid #dc2626;
+}
+
+/* View Details Button */
+.view-details-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 600;
     text-align: center;
 }
 
+.view-details-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+}
 
-.registration-container .form-group {
+/* No events and no results */
+.no-events, .no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    grid-column: 1 / -1;
+}
+
+.no-events h4, .no-results h4 {
+    color: #374151;
+    margin-bottom: 1rem;
+}
+
+.results-header {
     margin-bottom: 1.5rem;
 }
 
-.registration-container .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+.results-header h4 {
     color: #374151;
+    font-size: 1.2rem;
 }
 
-.registration-container .form-group input,
-.registration-container .form-group select,
-.registration-container .form-group textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.registration-container .form-group input:focus,
-.registration-container .form-group select:focus,
-.registration-container .form-group textarea:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.registration-container .form-group textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-.registration-container .form-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-}
-
-@media (max-width: 480px) {
-    .registration-container .form-buttons {
+/* Responsive design */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    nav ul {
+        gap: 1rem;
+    }
+    
+    .hero h2 {
+        font-size: 2rem;
+    }
+    
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    main {
+        width: 95%;
+    }
+    
+    .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+        margin-right: 0;
+    }
+    
+    .form-buttons {
         flex-direction: column;
     }
     
-    .registration-container .form-buttons .btn {
-        width: 100%;
-        margin-right: 0;
+    .event-content {
+        grid-template-columns: 1fr;
     }
-}
-
-
-.registration-container + .success-message {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    margin: 2rem auto;
-    max-width: 800px;
-    width: 90%;
-    text-align: center;
-    border-left: 5px solid #10b981;
-}
-
-.registration-container + .success-message h3 {
-    color: #065f46;
-    margin-bottom: 1rem;
-    font-size: 1.8rem;
-}
-
-.registration-container + .success-message p {
-    color: #047857;
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
-}
-
-
-.required-field::after {
-    content: " *";
-    color: #ef4444;
-}
-/* Mobile-specific optimizations for registration page */
-@media (max-width: 768px) {
-
+    
+    .event-header h2 {
+        font-size: 2em;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .navigation-actions {
+        flex-direction: column;
+    }
+    
+    .registration-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
     .registration-container .form-group input,
     .registration-container .form-group select,
     .registration-container .form-group textarea {
         padding: 1rem;
-        font-size: 16px; 
-        min-height: 44px; 
+        font-size: 16px;
+        min-height: 44px;
     }
     
-
     .registration-container .btn {
         padding: 1rem 1.5rem;
         min-height: 44px;
@@ -1165,19 +903,6 @@ progress::-webkit-progress-value {
         font-size: 1rem;
     }
     
-
-    .registration-container .form-group label {
-        font-size: 1rem;
-        margin-bottom: 0.75rem;
-    }
-    
-
-    .registration-container .event-details,
-    .registration-container .search-form {
-        padding: 1.5rem;
-    }
-    
-
     .registration-container .info-item {
         flex-direction: column;
         align-items: flex-start;
@@ -1194,49 +919,26 @@ progress::-webkit-progress-value {
         text-align: left;
         font-size: 1rem;
     }
-    
-
-    .registration-container .form-buttons {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .registration-container .form-buttons .btn {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 0;
-    }
-    
-
-    .registration-container + .success-message {
-        padding: 1.5rem;
-        margin: 1rem auto;
-    }
-    
-    .registration-container + .success-message .form-buttons {
-        flex-direction: column;
-    }
-    
-    .registration-container + .success-message .btn {
-        width: 100%;
-        margin: 0.25rem 0;
-    }
-    
-
-    .registration-container select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        background-size: 0.65rem;
-        padding-right: 2.5rem;
-    }
 }
 
-
 @media (max-width: 480px) {
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+    
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-buttons {
+        flex-direction: column;
+    }
+    
+    .form-buttons .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
     .registration-container {
         width: 95%;
         margin: 1rem auto;
@@ -1247,18 +949,17 @@ progress::-webkit-progress-value {
         padding: 1rem;
     }
     
-
     .registration-container {
         font-size: 16px;
     }
     
-
     .registration-container h2,
     .registration-container h3 {
         font-size: 1.3rem;
     }
 }
 
+/* Mobile form optimization */
 .registration-container input[type="text"],
 .registration-container input[type="email"],
 .registration-container input[type="tel"],
@@ -1277,4 +978,16 @@ progress::-webkit-progress-value {
 .registration-container textarea:focus {
     outline: 2px solid #2563eb;
     outline-offset: 2px;
+}
+
+/* Select dropdown styling for mobile */
+.registration-container select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.65rem;
+    padding-right: 2.5rem;
 }

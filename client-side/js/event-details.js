@@ -1,8 +1,9 @@
-// js/event-details.js
+
+const API_BASE_URL = 'https://f3ce1f1f7e196724bc049b8111b70e55.serveo.net/api';
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Event details page loaded');
     
- 
     const urlParams = new URLSearchParams(window.location.search);
     const eventId = urlParams.get('id');
     
@@ -17,13 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setupRegisterButton();
 });
 
-
 async function loadEventDetails(eventId) {
     try {
         showLoading();
         
         console.log('Fetching event details for ID:', eventId);
-        const response = await fetch(`/api/events/${eventId}`);
+        const response = await fetch(`${API_BASE_URL}/events/${eventId}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -43,147 +43,131 @@ async function loadEventDetails(eventId) {
     }
 }
 
+function setupRegisterButton() {
+    const registerButton = document.getElementById('register-button');
+    if (registerButton) {
+        registerButton.addEventListener('click', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('id');
+            
+            if (eventId) {
+                window.location.href = `registration.html?eventId=${eventId}`;
+            } else {
+                window.location.href = 'registration.html';
+            }
+        });
+    }
+}
+
+function showLoading() {
+    const eventDetails = document.getElementById('event-details');
+    if (eventDetails) {
+        eventDetails.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading event details...</p>
+            </div>
+        `;
+    }
+}
+
+function showError(message) {
+    const eventDetails = document.getElementById('event-details');
+    if (eventDetails) {
+        eventDetails.innerHTML = `
+            <div class="error-message">
+                <h3>Error Loading Event</h3>
+                <p>${message}</p>
+                <div style="margin-top: 1rem;">
+                    <a href="index.html" class="btn">← Back to Home</a>
+                    <a href="search.html" class="btn btn-secondary">🔍 Find Other Events</a>
+                </div>
+            </div>
+        `;
+    }
+}
 
 function displayEventDetails(event) {
-    const container = document.getElementById('event-details');
+    const eventDetails = document.getElementById('event-details');
     
-    console.log('Displaying event:', event);
+    if (!eventDetails) return;
     
-
-    const progressPercentage = event.goal_amount > 0 
-        ? Math.min(100, (event.progress_amount / event.goal_amount) * 100) 
-        : 0;
-    
-
-    const isUpcoming = new Date(event.date) >= new Date();
-    const statusText = isUpcoming ? 'Upcoming' : 'Past Event';
-    const statusClass = isUpcoming ? 'upcoming' : 'past';
-    
-    container.innerHTML = `
+    eventDetails.innerHTML = `
         <div class="event-details-container">
             <div class="event-header">
-                <h2>${event.name || 'Event Name'}</h2>
+                <h1>${event.name}</h1>
                 <div class="event-meta">
-                    <span class="event-category">${event.category_name || 'General'}</span>
-                    <span class="event-status ${statusClass}">${statusText}</span>
+                    <span class="event-category">${event.category_name || event.category || 'General'}</span>
+                    <span class="event-status upcoming">Upcoming</span>
                 </div>
             </div>
             
             <div class="event-content">
-                <div class="event-info">
-                    <div class="info-section">
-                        <h3>📅 Event Details</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <strong>Date & Time:</strong>
-                                <span>${formatDateTime(event.date)}</span>
-                            </div>
-                            <div class="info-item">
-                                <strong>📍 Location:</strong>
-                                <span>${event.location || 'Location not specified'}</span>
-                            </div>
-                            <div class="info-item">
-                                <strong>🎯 Category:</strong>
-                                <span>${event.category_name || 'General'}</span>
-                            </div>
+                <div class="info-section">
+                    <h3>Event Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Date & Time:</strong>
+                            <span>${formatDate(event.date)}</span>
                         </div>
-                    </div>
-                    
-                    ${event.purpose ? `
-                    <div class="info-section">
-                        <h3>🎯 Purpose</h3>
-                        <p>${event.purpose}</p>
-                    </div>
-                    ` : ''}
-                    
-                    <div class="info-section">
-                        <h3>📖 Description</h3>
-                        <p>${event.full_description || event.description || 'No detailed description available.'}</p>
+                        <div class="info-item">
+                            <strong>Location:</strong>
+                            <span>${event.location}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Organizer:</strong>
+                            <span>${event.organizer || 'Charity Events Organization'}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Contact Email:</strong>
+                            <span>${event.contact_email || 'contact@charityevents.org'}</span>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="event-sidebar">
                     <div class="ticket-info">
-                        <h3>🎟️ Ticket Information</h3>
+                        <h3>Ticket Information</h3>
                         <div class="ticket-price">
-                            <strong>Price:</strong>
-                            <span class="price">$${event.ticket_price || 0}</span>
-                            ${(event.ticket_price === 0 || !event.ticket_price) ? '<span class="free-badge">FREE</span>' : ''}
+                            <span class="price">${formatCurrency(event.ticket_price)}</span>
+                            ${event.ticket_price === 0 || event.ticket_price === null ? '<span class="free-badge">FREE</span>' : ''}
                         </div>
-                        <p class="ticket-note">All proceeds go directly to support the charitable cause</p>
+                        <p class="ticket-note">All proceeds go to charitable causes</p>
                     </div>
                     
                     ${event.goal_amount ? `
                     <div class="fundraising-info">
-                        <h3>💰 Fundraising Progress</h3>
+                        <h3>Fundraising Progress</h3>
                         <div class="goal-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${progressPercentage}%"></div>
-                            </div>
                             <div class="progress-stats">
-                                <span>Raised: $${event.progress_amount || 0}</span>
-                                <span>Goal: $${event.goal_amount}</span>
+                                <span>Raised: ${formatCurrency(event.progress_amount || 0)}</span>
+                                <span>Goal: ${formatCurrency(event.goal_amount)}</span>
                             </div>
-                            <div class="progress-percentage">${progressPercentage.toFixed(1)}%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${Math.min(100, ((event.progress_amount || 0) / event.goal_amount) * 100)}%"></div>
+                            </div>
+                            <div class="progress-percentage">
+                                ${Math.round(((event.progress_amount || 0) / event.goal_amount) * 100)}% Funded
+                            </div>
                         </div>
                     </div>
                     ` : ''}
                 </div>
             </div>
-        </div>
-    `;
-}
-
-
-function formatDateTime(dateString) {
-    try {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    } catch (error) {
-        return 'Date not specified';
-    }
-}
-
-
-function setupRegisterButton() {
-    const registerButton = document.getElementById('register-button');
-    if (registerButton) {
-        registerButton.addEventListener('click', function() {
             
-            alert('🎟️ Registration Feature\n\nThis feature is currently under construction and will be available in the next version of our website.\n\nThank you for your interest in supporting our charity events!');
-        });
-    }
-}
-
-
-function showLoading() {
-    const container = document.getElementById('event-details');
-    container.innerHTML = `
-        <div class="loading-state">
-            <div class="loading-spinner"></div>
-            <p>Loading event details...</p>
-        </div>
-    `;
-}
-
-
-function showError(message) {
-    const container = document.getElementById('event-details');
-    container.innerHTML = `
-        <div class="error-state">
-            <h3>⚠️ Error Loading Event</h3>
-            <p>${message}</p>
-            <div class="error-actions">
-                <a href="index.html" class="btn">← Back to Home</a>
-                <a href="search.html" class="btn btn-secondary">🔍 Search Events</a>
+            ${event.purpose ? `
+            <div class="info-section">
+                <h3>Event Purpose</h3>
+                <p>${event.purpose}</p>
             </div>
+            ` : ''}
+            
+            ${event.description ? `
+            <div class="info-section">
+                <h3>Description</h3>
+                <p>${event.description}</p>
+            </div>
+            ` : ''}
         </div>
     `;
 }

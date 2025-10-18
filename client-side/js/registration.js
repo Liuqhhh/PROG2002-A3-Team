@@ -1,64 +1,77 @@
-// registration.js - Enhanced version with complete navigation
+
+const API_BASE_URL = 'https://f3ce1f1f7e196724bc049b8111b70e55.serveo.net/api';
+let currentEvent = null;
+let ticketPrice = 0;
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🎟️ Registration page initialized');
     
-    // Initialize the page
     loadEventInfo();
     setupFormValidation();
     setupRealTimeValidation();
     setupEventListeners();
 });
 
-// Get event ID from URL parameters
 function getEventIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('eventId') || 'test';
+    return urlParams.get('eventId');
 }
 
-// Load event information
-function loadEventInfo() {
+async function loadEventInfo() {
     const eventId = getEventIdFromURL();
     console.log('Loading event info for ID:', eventId);
     
+    if (!eventId) {
+        showDefaultEvent();
+        return;
+    }
 
-    const testEvent = {
-        id: eventId,
-        name: "慈善活动示例",
-        date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30天后
-        location: "活动地点待定",
-        description: "这是一个测试活动，用于演示报名页面功能。实际活动信息将在后端完成后显示。",
-        ticketPrice: 100,
-        category: "测试活动",
-        purpose: "演示慈善活动报名流程"
+    try {
+        const response = await fetch(`${API_BASE_URL}/events/${eventId}`);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            currentEvent = result.data;
+            updateEventUI(currentEvent);
+        } else {
+            showDefaultEvent();
+        }
+    } catch (error) {
+        console.error('Error loading event:', error);
+        showDefaultEvent();
+    }
+}
+
+function showDefaultEvent() {
+    const defaultEvent = {
+        id: 'default',
+        name: "Charity Gala Dinner",
+        date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        location: "City Center International Convention Center",
+        description: "Annual charity fundraising dinner featuring auctions and performances to support children's education. All proceeds will be donated to the Children's Education Foundation to provide learning resources and scholarships for underprivileged students.",
+        ticket_price: 150,
+        category_name: "Fundraising Gala",
+        purpose: "Supporting children's education through fundraising"
     };
-
-    updateEventUI(testEvent);
+    
+    currentEvent = defaultEvent;
+    ticketPrice = defaultEvent.ticket_price;
+    updateEventUI(defaultEvent);
+    updateTicketOptions();
 }
 
-// Update event information in the UI
 function updateEventUI(event) {
-    // Update event details
-    const eventNameElement = document.querySelector('.event-details .info-item:nth-child(1) span');
-    const eventDateElement = document.querySelector('.event-details .info-item:nth-child(2) span');
-    const eventLocationElement = document.querySelector('.event-details .info-item:nth-child(3) span');
-    const eventPriceElement = document.querySelector('.event-details .ticket-price');
-    const eventDescriptionElement = document.querySelector('.event-details .event-description p');
+    document.getElementById('event-name').textContent = event.name;
+    document.getElementById('event-date').textContent = formatDateTime(event.date);
+    document.getElementById('event-location').textContent = event.location;
+    document.getElementById('event-price').textContent = `$${event.ticket_price || 0}`;
+    document.getElementById('event-description').textContent = event.description;
     
-    if (eventNameElement) eventNameElement.textContent = event.name;
-    if (eventDateElement) eventDateElement.textContent = formatDateTime(event.date);
-    if (eventLocationElement) eventLocationElement.textContent = event.location;
-    if (eventPriceElement) eventPriceElement.textContent = `$${event.ticketPrice}.00`;
-    if (eventDescriptionElement) eventDescriptionElement.textContent = event.description;
-    
-    // Update ticket options with prices
-    updateTicketOptions(event.ticketPrice);
-    
-    // Update page title
-    document.title = `${event.name} - Registration | Charity Events`;
+    ticketPrice = event.ticket_price || 0;
+    updateTicketOptions();
 }
 
-// Update ticket dropdown with calculated prices
-function updateTicketOptions(ticketPrice) {
+function updateTicketOptions() {
     const ticketSelect = document.getElementById('ticketCount');
     if (!ticketSelect) return;
     
@@ -70,21 +83,20 @@ function updateTicketOptions(ticketPrice) {
         { value: '5', text: `5 Tickets - $${(ticketPrice * 5).toFixed(2)}` }
     ];
     
-    // Clear existing options except the first one
     const firstOption = ticketSelect.options[0];
     ticketSelect.innerHTML = '';
     ticketSelect.appendChild(firstOption);
     
-    // Add new options with prices
     options.forEach(option => {
         const optionElement = document.createElement('option');
         optionElement.value = option.value;
         optionElement.textContent = option.text;
         ticketSelect.appendChild(optionElement);
     });
+    
+    updateTotalAmount();
 }
 
-// Setup form validation
 function setupFormValidation() {
     const form = document.getElementById('registrationForm');
     if (!form) return;
@@ -101,33 +113,28 @@ function setupFormValidation() {
     });
 }
 
-// Setup real-time validation
 function setupRealTimeValidation() {
     const inputs = document.querySelectorAll('#registrationForm input, #registrationForm select, #registrationForm textarea');
     
     inputs.forEach(input => {
-        // Validate on blur
         input.addEventListener('blur', function() {
             validateField(this);
         });
         
-        // Clear errors on input
         input.addEventListener('input', function() {
             clearFieldError(this);
         });
         
-        // Special handling for select elements
         if (input.tagName === 'SELECT') {
             input.addEventListener('change', function() {
                 validateField(this);
+                updateTotalAmount();
             });
         }
     });
 }
 
-// Setup additional event listeners
 function setupEventListeners() {
-    // Update total amount when ticket count changes
     const ticketSelect = document.getElementById('ticketCount');
     if (ticketSelect) {
         ticketSelect.addEventListener('change', function() {
@@ -136,7 +143,6 @@ function setupEventListeners() {
     }
 }
 
-// Validate entire form
 function validateForm() {
     let isValid = true;
     const fields = [
@@ -155,7 +161,6 @@ function validateForm() {
     return isValid;
 }
 
-// Validate individual field
 function validateField(field) {
     const validators = {
         fullName: validateRequired,
@@ -172,7 +177,6 @@ function validateField(field) {
     return true;
 }
 
-// Field validators
 function validateRequired(field) {
     const value = field.value.trim();
     if (!value) {
@@ -205,7 +209,7 @@ function validatePhone(field) {
     const value = field.value.trim();
     if (!value) {
         clearFieldError(field);
-        return true; // Phone is optional
+        return true;
     }
     
     const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
@@ -219,19 +223,14 @@ function validatePhone(field) {
 }
 
 function validateSpecialRequirements(field) {
-    const value = field.value.trim();
-    // Special requirements are optional, no validation needed
     clearFieldError(field);
     return true;
 }
 
-// Error handling functions
 function showFieldError(field, message) {
     clearFieldError(field);
     
     field.classList.add('error');
-    field.style.borderColor = '#ef4444';
-    field.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
     
     const errorElement = document.createElement('span');
     errorElement.className = 'error-message';
@@ -248,8 +247,6 @@ function showFieldError(field, message) {
 
 function clearFieldError(field) {
     field.classList.remove('error');
-    field.style.borderColor = '';
-    field.style.boxShadow = '';
     
     const existingError = field.parentNode.querySelector('.error-message');
     if (existingError) {
@@ -258,7 +255,6 @@ function clearFieldError(field) {
 }
 
 function showFormError(message) {
-    // Remove existing error messages
     const existingErrors = document.querySelectorAll('.form-error-message');
     existingErrors.forEach(error => error.remove());
     
@@ -280,7 +276,6 @@ function showFormError(message) {
     if (form) {
         form.insertBefore(errorDiv, form.firstChild);
         
-        // Auto-remove after 5 seconds
         setTimeout(() => {
             if (errorDiv.parentNode) {
                 errorDiv.remove();
@@ -289,19 +284,23 @@ function showFormError(message) {
     }
 }
 
-// Submit registration
+function updateTotalAmount() {
+    const ticketCount = parseInt(document.getElementById('ticketCount').value) || 0;
+    const total = ticketCount * ticketPrice;
+    document.getElementById('total-amount').textContent = total.toFixed(2);
+}
+
 function submitRegistration() {
     const form = document.getElementById('registrationForm');
     const submitBtn = form.querySelector('button[type="submit"]');
     
-    // Show loading state
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '⏳ Processing...';
     submitBtn.disabled = true;
     
-    // Collect form data
     const formData = {
-        eventId: getEventIdFromURL(),
+        eventId: getEventIdFromURL() || 'default',
+        eventName: document.getElementById('event-name').textContent,
         fullName: document.getElementById('fullName').value.trim(),
         email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
@@ -313,155 +312,63 @@ function submitRegistration() {
     
     console.log('📧 Submitting registration data:', formData);
     
-    // Simulate API call
     simulateAPICall(formData)
         .then(result => {
-            showSuccessMessage(result);
+            showSuccessMessage(result, formData);
         })
         .catch(error => {
             console.error('Registration failed:', error);
             showFormError('Registration failed. Please try again.');
         })
         .finally(() => {
-            // Restore button state
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         });
 }
 
-// Simulate API call
 function simulateAPICall(formData) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         setTimeout(() => {
-            // Simulate random success/failure for demo
-            const isSuccess = Math.random() > 0.2; // 80% success rate
-            
-            if (isSuccess) {
-                resolve({
-                    success: true,
-                    registrationId: 'REG-' + Date.now(),
-                    message: 'Registration completed successfully',
-                    data: formData
-                });
-            } else {
-                reject(new Error('Server temporarily unavailable'));
-            }
+            resolve({
+                success: true,
+                registrationId: 'REG-' + Date.now(),
+                message: 'Registration completed successfully',
+                data: formData
+            });
         }, 2000);
     });
 }
 
-// Show success message
-function showSuccessMessage(result) {
-    // Hide the registration container
+function showSuccessMessage(result, formData) {
     const registrationContainer = document.querySelector('.registration-container');
     if (registrationContainer) {
         registrationContainer.style.display = 'none';
     }
     
-    // Show success message
     const successMessage = document.getElementById('successMessage');
     if (successMessage) {
         successMessage.style.display = 'block';
         
-        // Update success message with registration details
-        const eventName = document.querySelector('.event-details .info-item:nth-child(1) span').textContent;
-        const eventDate = document.querySelector('.event-details .info-item:nth-child(2) span').textContent;
-        const eventLocation = document.querySelector('.event-details .info-item:nth-child(3) span').textContent;
-        
-        successMessage.innerHTML = `
-            <h3>🎉 Registration Successful!</h3>
-            <p>Thank you for registering for <strong>${eventName}</strong>.</p>
-            <p>We've sent a confirmation email to <strong>${document.getElementById('email').value}</strong>.</p>
+        document.getElementById('registration-details').innerHTML = `
             <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #0ea5e9;">
                 <p><strong>Registration Details:</strong></p>
-                <p><strong>Event:</strong> ${eventName}</p>
-                <p><strong>Date & Time:</strong> ${eventDate}</p>
-                <p><strong>Location:</strong> ${eventLocation}</p>
-                <p><strong>Tickets:</strong> ${document.getElementById('ticketCount').value}</p>
-                <p><strong>Total Amount:</strong> ${formatCurrency(calculateTotalAmount())}</p>
+                <p><strong>Event:</strong> ${formData.eventName}</p>
+                <p><strong>Date & Time:</strong> ${document.getElementById('event-date').textContent}</p>
+                <p><strong>Location:</strong> ${document.getElementById('event-location').textContent}</p>
+                <p><strong>Tickets:</strong> ${formData.ticketCount}</p>
+                <p><strong>Total Amount:</strong> $${formData.totalAmount.toFixed(2)}</p>
                 <p><strong>Confirmation ID:</strong> ${result.registrationId}</p>
             </div>
             <p><em>Please bring your confirmation ID and a valid ID to the event.</em></p>
-            
-            <div class="form-buttons">
-                <button onclick="goToHome()" class="btn">🏠 Return to Homepage</button>
-                <button onclick="browseAllEvents()" class="btn btn-secondary">🔍 Browse All Events</button>
-                <button onclick="goBackToEvent()" class="btn btn-secondary">📅 Back to Event Details</button>
-                <button onclick="shareEvent()" class="btn btn-secondary">📤 Share this Event</button>
-                <button onclick="contactSupport()" class="btn btn-secondary">📞 Contact Support</button>
-            </div>
         `;
     }
     
-    // Log success
     console.log('✅ Registration successful:', result);
 }
 
-// Enhanced Navigation Functions
-function goBack() {
-    window.history.back();
-}
-
-function goToHome() {
-    window.location.href = 'index.html';
-}
-
-function goToSearch() {
-    window.location.href = 'search.html';
-}
-
-// New Navigation Functions
-function goBackToEvent() {
-    const eventId = getEventIdFromURL();
-    if (eventId && eventId !== 'test') {
-        window.location.href = `event-details.html?eventId=${eventId}`;
-    } else {
-
-        goToHome();
-    }
-}
-
-function browseAllEvents() {
-    window.location.href = 'search.html';
-}
-
-function contactSupport() {
-    alert('请联系支持团队: support@charityevents.org\n电话: (555) 123-4567');
-}
-
-function shareEvent() {
-    const eventName = document.querySelector('.event-details .info-item:nth-child(1) span')?.textContent || '慈善活动';
-    const eventDate = document.querySelector('.event-details .info-item:nth-child(2) span')?.textContent || '';
-    
-    const shareText = `我正在参加 "${eventName}" ${eventDate}。一起来支持这个有意义的慈善活动吧！`;
-    
-    if (navigator.share) {
-
-        navigator.share({
-            title: eventName,
-            text: shareText,
-            url: window.location.href
-        });
-    } else {
-
-        prompt('复制以下链接分享给朋友:', window.location.href);
-    }
-}
-
-function printConfirmation() {
-    window.print();
-}
-
-// Utility functions
 function calculateTotalAmount() {
     const ticketCount = parseInt(document.getElementById('ticketCount').value) || 0;
-    const basePrice = 100; 
-    return ticketCount * basePrice;
-}
-
-function updateTotalAmount() {
-    const totalAmount = calculateTotalAmount();
-    return totalAmount;
+    return ticketCount * ticketPrice;
 }
 
 function formatDateTime(dateString) {
@@ -476,50 +383,23 @@ function formatDateTime(dateString) {
             minute: '2-digit'
         });
     } catch (error) {
-        console.error('Date formatting error:', error);
         return 'Date not specified';
     }
 }
 
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-    }).format(amount);
-}
-
-// Add CSS for error states if not already in style.css
-function injectErrorStyles() {
-    if (!document.querySelector('#registration-error-styles')) {
-        const style = document.createElement('style');
-        style.id = 'registration-error-styles';
-        style.textContent = `
-            .form-group.error input,
-            .form-group.error select,
-            .form-group.error textarea {
-                border-color: #ef4444 !important;
-                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
-            }
-            
-            .error-message {
-                color: #ef4444;
-                font-size: 0.875rem;
-                margin-top: 0.25rem;
-                display: block;
-            }
-            
-            .form-error-message {
-                background: #fee2e2;
-                color: #dc2626;
-                padding: 1rem;
-                border-radius: 8px;
-                margin: 1rem 0;
-                border-left: 4px solid #dc2626;
-            }
-        `;
-        document.head.appendChild(style);
+function goBackToEvent() {
+    const eventId = getEventIdFromURL();
+    if (eventId) {
+        window.location.href = `event-details.html?id=${eventId}`;
+    } else {
+        goToHome();
     }
 }
 
-// Initialize error styles
-injectErrorStyles();
+function goToHome() {
+    window.location.href = 'index.html';
+}
+
+function goToSearch() {
+    window.location.href = 'search.html';
+}

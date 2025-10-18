@@ -4,42 +4,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     console.log('🏠 Loading home page events...');
     
-    // Show loading state
+
     showLoading(eventListContainer);
     
     try {
-        const response = await fetchData('/events/home');
+
+        const response = await fetchData('/events');
+        console.log('API Response:', response);
         
-        if (response && response.success) {
-            const events = response.data;
-            
-            if (events.length > 0) {
-                displayEvents(events, eventListContainer);
-                console.log(`✅ Successfully loaded ${events.length} events`);
-            } else {
-                eventListContainer.innerHTML = `
-                    <div style="text-align: center; padding: 3rem; color: #666;">
-                        <h3>No Upcoming Events</h3>
-                        <p>There are currently no upcoming charity events. Please check back later for new events!</p>
-                        <p>You can also check our <a href="search.html" style="color: #2563eb;">search page</a> for all events.</p>
-                    </div>
-                `;
-            }
+        if (response && Array.isArray(response) && response.length > 0) {
+
+            displayEvents(response, eventListContainer);
+            console.log(`✅ Successfully loaded ${response.length} events`);
+        } else if (response && response.success && response.data && response.data.length > 0) {
+
+            displayEvents(response.data, eventListContainer);
+            console.log(`✅ Successfully loaded ${response.data.length} events`);
         } else {
-            showHomePageError(eventListContainer);
+            eventListContainer.innerHTML = `
+                <div style="text-align: center; padding: 3rem; color: #666;">
+                    <h3>No Upcoming Events</h3>
+                    <p>There are currently no upcoming charity events. Please check back later for new events!</p>
+                    <p>You can also check our <a href="search.html" style="color: #2563eb;">search page</a> for all events.</p>
+                </div>
+            `;
         }
     } catch (error) {
         console.error('Error loading home page events:', error);
-        showHomePageError(eventListContainer);
+        showHomePageError(eventListContainer, error);
     }
 });
 
 function displayEvents(events, container) {
+    console.log('Displaying events:', events);
+    
     container.innerHTML = events.map(event => `
         <div class="event-card">
             <div class="event-header">
-                <h3><a href="event-details.html?eventId=${event.id}">${event.name}</a></h3>
-                <span class="event-category">${event.category_name}</span>
+                <h3><a href="event-details.html?id=${event.id}">${event.name}</a></h3>
+                <span class="event-category">${event.category_name || event.category || 'General'}</span>
             </div>
             
             <div class="event-info">
@@ -49,81 +52,43 @@ function displayEvents(events, container) {
             </div>
             
             <div class="event-purpose">
-                <p><strong>🎯 Purpose:</strong> ${event.purpose}</p>
+                <p><strong>🎯 Purpose:</strong> ${event.purpose || 'Supporting charitable causes'}</p>
             </div>
             
             <div class="event-description">
-                <p>${event.description}</p>
+                <p>${event.description || 'No description available'}</p>
             </div>
             
             <div class="event-actions">
-                <a href="event-details.html?eventId=${event.id}" class="btn">View Details & Register</a>
+                <a href="event-details.html?id=${event.id}" class="btn">View Details & Register</a>
             </div>
         </div>
     `).join('');
 }
 
-function showHomePageError(container) {
+function showHomePageError(container, error) {
     container.innerHTML = `
         <div class="error-message">
-            <h3>Failed to Load Events</h3>
-            <p>We're having trouble loading the events right now. This could be because:</p>
-            <ul style="text-align: left; margin: 1rem 0;">
-                <li>The server is not running</li>
-                <li>There's a network connection issue</li>
-                <li>The database needs to be initialized</li>
-            </ul>
-            <p>Please try the following:</p>
+            <h3>Debug Information</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+            <p>API is working but there might be a display issue.</p>
             <div style="margin-top: 1rem;">
                 <button onclick="location.reload()" class="btn">🔄 Retry Loading</button>
-                <a href="search.html" class="btn btn-secondary">🔍 Try Search Page</a>
+                <button onclick="debugAPI()" class="btn">🐛 Debug API Response</button>
             </div>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                If the problem persists, please make sure the server is running on http://localhost:3000
-            </p>
         </div>
     `;
 }
 
-// Add some CSS for the new event card structure
-const style = document.createElement('style');
-style.textContent = `
-    .event-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
+
+async function debugAPI() {
+    try {
+        const response = await fetch('https://f3ce1f1f7e196724bc049b8111b70e55.serveo.net/api/events');
+        const data = await response.json();
+        console.log('📊 Full API Response:', data);
+        console.log('🔍 First event details:', data[0]);
+        alert('Check browser console for detailed API response');
+    } catch (error) {
+        console.error('Debug failed:', error);
     }
-    
-    .event-category {
-        background: #dbeafe;
-        color: #1e40af;
-        padding: 0.25rem 0.75rem;
-        border-radius: 15px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-    
-    .event-info {
-        margin-bottom: 1rem;
-    }
-    
-    .event-purpose {
-        margin-bottom: 1rem;
-        padding: 0.75rem;
-        background: #f0f9ff;
-        border-radius: 8px;
-        border-left: 3px solid #0ea5e9;
-    }
-    
-    .event-description {
-        margin-bottom: 1.5rem;
-        color: #6b7280;
-        line-height: 1.5;
-    }
-    
-    .event-actions {
-        text-align: center;
-    }
-`;
-document.head.appendChild(style);
+}

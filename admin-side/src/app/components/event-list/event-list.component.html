@@ -1,7 +1,6 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>活动管理</h2>
-    
   </div>
 
   <div *ngIf="loading" class="text-center">
@@ -19,15 +18,32 @@
         <div class="card-body">
           <h5 class="card-title">{{ event.title }}</h5>
           <p class="card-text">{{ event.description }}</p>
-          <p><strong>日期:</strong> {{ event.date }} {{ event.time }}</p>
-          <p><strong>地点:</strong> {{ event.location }}</p>
-          <p><strong>票价:</strong> ${{ event.price }}</p>
-          <p><strong>状态:</strong> {{ event.status }}</p>
           
+          <!-- 调试显示所有字段 -->
+          <div class="debug-info" style="background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 5px;">
+            <small class="text-muted">
+              <strong>调试信息:</strong><br>
+              日期: "{{ event.date }}"<br>
+              时间: "{{ event.time }}"<br>
+              票价: {{ event.price }}<br>
+              状态: "{{ event.status }}"<br>
+              分类: "{{ event.category }}"<br>
+              可用票数: {{ event.available_tickets }}
+            </small>
+          </div>
+          
+          <p><strong>日期:</strong> {{ event.date || '无日期信息' }} {{ event.time || '无时间信息' }}</p>
+          <p><strong>地点:</strong> {{ event.location }}</p>
+          <p><strong>票价:</strong> ${{ event.price || 0 }}</p>
+          <p><strong>状态:</strong> {{ event.status || '未知状态' }}</p>
           
           <div class="btn-group">
             <button class="btn btn-warning btn-sm" [routerLink]="['/events/edit', event.id]">编辑</button>
             <button class="btn btn-danger btn-sm" (click)="deleteEvent(event)">删除</button>
+          </div>
+          
+          <div class="card-footer bg-light">
+            <small class="text-muted">ID: {{ event.id }}</small>
           </div>
         </div>
       </div>
