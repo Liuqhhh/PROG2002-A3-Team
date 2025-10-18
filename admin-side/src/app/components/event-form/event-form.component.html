@@ -19,11 +19,15 @@
     <div class="row">
       <div class="col-md-6 mb-3">
         <label class="form-label">日期</label>
-        <input type="date" class="form-control" [(ngModel)]="event.date" name="date" required>
+        <input type="text" class="form-control" [(ngModel)]="event.date" name="date" 
+               placeholder="格式: YYYY-MM-DD (例如: 2024-01-15)" required>
+        <small class="form-text text-muted">请输入日期，格式: YYYY-MM-DD</small>
       </div>
       <div class="col-md-6 mb-3">
         <label class="form-label">时间</label>
-        <input type="time" class="form-control" [(ngModel)]="event.time" name="time" required>
+        <input type="text" class="form-control" [(ngModel)]="event.time" name="time" 
+               placeholder="格式: HH:MM (例如: 14:30)" required>
+        <small class="form-text text-muted">请输入时间，格式: HH:MM (24小时制)</small>
       </div>
     </div>
 
@@ -62,13 +66,15 @@
         {{ loading ? '保存中...' : (isEdit ? '更新' : '创建') }}
       </button>
       <button type="button" class="btn btn-secondary" routerLink="/events">取消</button>
-      
-      <!-- 测试按钮 -->
-      <button *ngIf="isEdit" type="button" class="btn btn-info" 
+    </div>
+
+    <!-- 测试按钮移到表单外面，避免嵌套问题 -->
+    <div class="mt-3" *ngIf="isEdit">
+      <button type="button" class="btn btn-info me-2" 
               (click)="testMinimalUpdate()" [disabled]="loading">
         测试更新
       </button>
-      <button *ngIf="isEdit" type="button" class="btn btn-warning" 
+      <button type="button" class="btn btn-warning" 
               (click)="testTitleUpdate()" [disabled]="loading">
         只更新标题
       </button>
