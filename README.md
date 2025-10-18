@@ -1,103 +1,130 @@
-**🎫 PROG2002-A3-Team – Event Management System**
-A full-stack web application for event management, including a client-side interface for users, an admin-side dashboard for management, and a backend API with database support.
+Project Overview
+A full-stack event management system built with Angular for the admin panel, vanilla JavaScript for the client frontend, and Node.js for the backend API.
 
-**📁 Project Structure**
-text
-PROG2002-A3-Team/
-├── 📂 admin-side/          # Angular-based admin dashboard
-│   ├── src/app/
-│   │   ├── components/     # UI components
-│   │   ├── models/         # Data models
-│   │   ├── services/       # API services
-│   │   └── app.*           # Config, routes, styles
-│   ├── angular.json
-│   └── package.json
-│
-├── 📂 backend/             # Node.js server + API
-│   ├── server.js           # Main server file
-│   ├── test_update.js      # Update testing script
-│   ├── package.json
-│   └── prog2002_a3_backup.sql  # Database backup
-│
-├── 📂 client-side/         # Frontend for users
-│   ├── css/                # Stylesheets
-│   ├── js/                 # JavaScript modules
-│   │   ├── config.js
-│   │   ├── event-details.js
-│   │   ├── home.js
-│   │   ├── main.js
-│   │   ├── registration.js
-│   │   └── search.js
-│   ├── index.html
-│   ├── event-details.html
-│   ├── registration.html
-│   └── search.html
-│
-├── 📄 README.md            # Project documentation
-└── 📄 .gitignore           # Git ignore rules
-**👨‍💻 Team Members & Responsibilities**
-Member	Role	Responsibilities
-Wang 🧑‍💻	Frontend Developer	Client-side UI & JavaScript
-Liu 👩‍💻	Full-Stack Developer	Admin-side Angular app & Backend API
-**🚀 Features**
-**Client-Side (User)**
-Browse events
+Team Members and Responsibilities
+Wang - Frontend Developer
 
-Event search and filtering
+Client-side UI development
 
-User registration
+JavaScript functionality
 
-Event details view
+User interface implementation
 
-**Admin-Side (Management)**
-Angular-based SPA
+Liu - Full-Stack Developer
 
-Event management
+Admin-side Angular application
 
-User management
+Backend API development
 
-Dashboard analytics
+Database integration
 
-**Backend (API & Database)**
-RESTful API with Node.js
+Project Structure
+Backend API (backend/)
+server.js - Main server file
 
-MySQL database support
+test_update.js - Update testing script
 
-Database backup included (prog2002_a3_backup.sql)
+prog2002_a3_backup.sql - Database backup
 
-**🛠️ Technologies Used**
-Frontend (Client): HTML, CSS, JavaScript
+package.json - Dependencies configuration
 
-Admin Panel: Angular, TypeScript
+Admin Dashboard (admin-side/)
+src/app/components/ - UI components
 
-Backend: Node.js, Express.js
+src/app/models/ - Data models
 
-Database: MySQL
+src/app/services/ - API services
 
-Version Control: Git & GitHub
+app.config.js - Angular configuration
 
-**📦 Installation & Setup**
-Backend
-bash
+app.route.js - Routing configuration
+
+app.html - Main template
+
+angular.json - Project configuration
+
+Client Frontend (client-side/)
+css/ - Stylesheets
+
+js/ - JavaScript modules
+
+config.js
+
+home.js
+
+event-details.js
+
+registration.js
+
+search.js
+
+main.js
+
+index.html - Home page
+
+event-details.html - Event details page
+
+registration.html - User registration page
+
+search.html - Search page
+
+System Features
+Client Features
+Browse and search events
+
+Event details viewing
+
+User registration system
+
+Responsive user interface
+
+Admin Features
+Angular-based single page application
+
+Event management dashboard
+
+User management system
+
+Real-time analytics
+
+Backend Features
+RESTful API endpoints
+
+MySQL database integration
+
+Database backup system
+
+Test update functionality
+
+Technology Stack
+Frontend (Client): HTML5, CSS3, JavaScript (ES6+)
+Admin Panel: Angular Framework, TypeScript
+Backend: Node.js, Express.js, MySQL Database
+
+Installation Instructions
+Backend Setup
 cd backend
 npm install
 node server.js
-Admin Side
-bash
+
+Admin Panel Setup
 cd admin-side
 npm install
 ng serve
-Client Side
-Open client-side/index.html in a browser.
 
-**📌 Recent Commits & Updates**
-Backend API added – whr1314
+Client Setup
+Open client-side/index.html in your web browser
 
-Admin-side updated – Laughhh
+Recent Updates
+Backend API implementation completed
 
-Client-side updated – Luaphh / Lhophhh
+Admin-side components updated
+
+Client-side JavaScript modules enhanced
 
 Angular configuration improved
 
-Database backup included
+Database backup file added
 
+Database
+The project includes a MySQL database backup file (prog2002_a3_backup.sql) containing the complete database structure and sample data.
