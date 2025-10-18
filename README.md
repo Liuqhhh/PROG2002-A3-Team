@@ -1,7 +1,7 @@
-🎫 PROG2002-A3-Team – Event Management System
+**🎫 PROG2002-A3-Team – Event Management System**
 A full-stack web application for event management, including a client-side interface for users, an admin-side dashboard for management, and a backend API with database support.
 
-📁 Project Structure
+**📁 Project Structure**
 text
 PROG2002-A3-Team/
 ├── 📂 admin-side/          # Angular-based admin dashboard
@@ -35,12 +35,12 @@ PROG2002-A3-Team/
 │
 ├── 📄 README.md            # Project documentation
 └── 📄 .gitignore           # Git ignore rules
-👨‍💻 Team Members & Responsibilities
+**👨‍💻 Team Members & Responsibilities**
 Member	Role	Responsibilities
 Wang 🧑‍💻	Frontend Developer	Client-side UI & JavaScript
 Liu 👩‍💻	Full-Stack Developer	Admin-side Angular app & Backend API
-🚀 Features
-Client-Side (User)
+**🚀 Features**
+**Client-Side (User)**
 Browse events
 
 Event search and filtering
@@ -49,7 +49,7 @@ User registration
 
 Event details view
 
-Admin-Side (Management)
+**Admin-Side (Management)**
 Angular-based SPA
 
 Event management
@@ -58,14 +58,14 @@ User management
 
 Dashboard analytics
 
-Backend (API & Database)
+**Backend (API & Database)**
 RESTful API with Node.js
 
 MySQL database support
 
 Database backup included (prog2002_a3_backup.sql)
 
-🛠️ Technologies Used
+**🛠️ Technologies Used**
 Frontend (Client): HTML, CSS, JavaScript
 
 Admin Panel: Angular, TypeScript
@@ -76,7 +76,7 @@ Database: MySQL
 
 Version Control: Git & GitHub
 
-📦 Installation & Setup
+**📦 Installation & Setup**
 Backend
 bash
 cd backend
@@ -90,7 +90,7 @@ ng serve
 Client Side
 Open client-side/index.html in a browser.
 
-📌 Recent Commits & Updates
+**📌 Recent Commits & Updates**
 Backend API added – whr1314
 
 Admin-side updated – Laughhh
