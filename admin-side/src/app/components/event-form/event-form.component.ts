@@ -16,13 +16,10 @@ export class EventFormComponent implements OnInit {
   event: Event = {
     title: '',
     description: '',
-    date: '',
-    time: '',
+    event_date: '',
     location: '',
-    category: '',
-    price: 0,
-    available_tickets: 0,
-    status: 'active'
+    ticket_price: 0,
+    available_tickets: 0
   };
   
   isEdit = false;
@@ -63,13 +60,10 @@ export class EventFormComponent implements OnInit {
         console.log('- id:', event.id);
         console.log('- title:', event.title);
         console.log('- description:', event.description);
-        console.log('- date:', event.date);
-        console.log('- time:', event.time);
+        console.log('- event_date:', event.event_date);
         console.log('- location:', event.location);
-        console.log('- category:', event.category);
-        console.log('- price:', event.price);
+        console.log('- ticket_price:', event.ticket_price);
         console.log('- available_tickets:', event.available_tickets);
-        console.log('- status:', event.status);
         
         this.event = event;
         this.loading = false;
@@ -82,140 +76,78 @@ export class EventFormComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    // 表单验证
-    if (!this.event.title || !this.event.description || !this.event.date || !this.event.time) {
-      alert('请填写所有必填字段');
-      return;
-    }
-
-    console.log('=== 详细提交数据调试 ===');
-    console.log('原始event对象:', this.event);
-    
-    // 使用转换函数将前端数据转换为API格式
-    const apiData = toApiEvent(this.event);
-    console.log('转换后的API数据:', apiData);
-    console.log('JSON字符串:', JSON.stringify(apiData, null, 2));
-
-    this.loading = true;
-
-    if (this.isEdit && this.eventId) {
-      this.eventService.updateEvent(this.eventId, apiData).subscribe({
-        next: () => {
-          alert('更新成功');
-          this.router.navigate(['/events']);
-        },
-        error: (error) => {
-          console.error('=== 更新失败完整详情 ===');
-          console.error('错误对象:', error);
-          console.error('错误状态:', error.status);
-          console.error('错误消息:', error.message);
-          console.error('错误响应:', error.error);
-          
-          this.loading = false;
-          
-          if (error.status === 500) {
-            alert('服务器内部错误，可能是数据格式问题。请检查控制台日志。');
-          } else {
-            alert('更新失败: ' + error.message);
-          }
-        }
-      });
-    } else {
-      // 创建新活动
-      const apiData = toApiEvent(this.event);
-      console.log('创建活动发送的数据:', apiData);
-
-      this.eventService.createEvent(apiData).subscribe({
-        next: () => {
-          alert('创建成功');
-          this.router.navigate(['/events']);
-        },
-        error: (error) => {
-          console.error('创建失败:', error);
-          this.loading = false;
-          
-          if (error.status === 409) {
-            alert('活动已存在或数据冲突');
-          } else if (error.status === 400) {
-            alert('请求参数错误，请检查数据格式');
-          } else if (error.status === 500) {
-            alert('服务器内部错误');
-          } else {
-            alert('创建失败，请稍后重试');
-          }
-        }
-      });
-    }
+ onSubmit(): void {
+  // 表单验证
+  if (!this.event.title || !this.event.description || !this.event.event_date) {
+    alert('请填写所有必填字段');
+    return;
   }
 
-  // 测试方法：使用最小化数据更新
-  testMinimalUpdate(): void {
-    if (!this.eventId) {
-      alert('没有活动ID');
-      return;
-    }
-    
-    console.log('=== 测试最小化更新 ===');
-    
-    // 创建最小化数据，确保数据类型正确
-    const minimalData = {
-      title: String(this.event.title || ''),
-      description: String(this.event.description || ''),
-      event_date: String(this.event.date || ''),
-      event_time: String(this.event.time || ''),
-      location: String(this.event.location || ''),
-      event_category: String(this.event.category || ''),
-      ticket_price: parseFloat(String(this.event.price)) || 0,
-      available_tickets: parseInt(String(this.event.available_tickets)) || 0,
-      status: String(this.event.status || 'active')
-    };
-    
-    console.log('最小化数据:', minimalData);
-    console.log('最小化数据JSON:', JSON.stringify(minimalData, null, 2));
-    
-    this.loading = true;
-    
-    this.eventService.updateEvent(this.eventId, minimalData).subscribe({
-      next: () => {
-        alert('最小化更新成功');
-        this.router.navigate(['/events']);
+  console.log('=== 详细提交数据调试 ===');
+  console.log('原始event对象:', this.event);
+  
+  // 确保数字字段是数字类型
+  const submitData = {
+    ...this.event,
+    ticket_price: Number(this.event.ticket_price), // 确保是数字
+    available_tickets: Number(this.event.available_tickets) // 确保是数字
+  };
+  
+  // 使用转换函数将前端数据转换为API格式
+  const apiData = toApiEvent(submitData);
+  console.log('转换后的API数据:', apiData);
+  console.log('JSON字符串:', JSON.stringify(apiData, null, 2));
+
+  this.loading = true;
+
+if (this.isEdit && this.eventId) {
+    this.eventService.updateEvent(this.eventId, apiData).subscribe({
+      next: (response: any) => {
+        console.log('=== 更新成功响应 ===');
+        console.log('API响应:', response);
+        
+        if (response.success) {
+          console.log('更新成功，准备跳转到活动列表');
+          // 添加短暂延迟确保数据保存完成
+          setTimeout(() => {
+            alert('更新成功');
+            this.router.navigate(['/events']);
+          }, 500);
+        } else {
+          alert('更新失败: ' + (response.error || '未知错误'));
+          this.loading = false;
+        }
       },
       error: (error) => {
-        console.error('最小化更新失败:', error);
+        console.error('=== 更新失败完整详情 ===');
+        console.error('错误对象:', error);
+        console.error('错误消息:', error.message);
+        
         this.loading = false;
-        alert('最小化更新也失败: ' + error.message);
+        alert('更新失败: ' + error.message);
+      }
+    });
+  } else {
+    // 创建新活动
+    this.eventService.createEvent(apiData).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          console.log('创建成功，准备跳转到活动列表');
+          setTimeout(() => {
+            alert('创建成功');
+            this.router.navigate(['/events']);
+          }, 500);
+        } else {
+          alert('创建失败: ' + (response.error || '未知错误'));
+          this.loading = false;
+        }
+      },
+      error: (error) => {
+        console.error('创建失败:', error);
+        this.loading = false;
+        alert('创建失败: ' + error.message);
       }
     });
   }
-
-  // 测试方法：只更新标题
-  testTitleUpdate(): void {
-    if (!this.eventId) {
-      alert('没有活动ID');
-      return;
-    }
-    
-    console.log('=== 测试只更新标题 ===');
-    
-    const titleOnlyData = {
-      title: String(this.event.title || '')
-    };
-    
-    console.log('只更新标题数据:', titleOnlyData);
-    
-    this.loading = true;
-    
-    this.eventService.updateEvent(this.eventId, titleOnlyData).subscribe({
-      next: () => {
-        alert('标题更新成功');
-        this.router.navigate(['/events']);
-      },
-      error: (error) => {
-        console.error('标题更新失败:', error);
-        this.loading = false;
-        alert('标题更新失败: ' + error.message);
-      }
-    });
-  }
+}
 }

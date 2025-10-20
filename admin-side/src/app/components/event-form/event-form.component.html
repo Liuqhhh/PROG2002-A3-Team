@@ -16,19 +16,11 @@
       <textarea class="form-control" [(ngModel)]="event.description" name="description" rows="3" required></textarea>
     </div>
 
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label">日期</label>
-        <input type="text" class="form-control" [(ngModel)]="event.date" name="date" 
-               placeholder="格式: YYYY-MM-DD (例如: 2024-01-15)" required>
-        <small class="form-text text-muted">请输入日期，格式: YYYY-MM-DD</small>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label">时间</label>
-        <input type="text" class="form-control" [(ngModel)]="event.time" name="time" 
-               placeholder="格式: HH:MM (例如: 14:30)" required>
-        <small class="form-text text-muted">请输入时间，格式: HH:MM (24小时制)</small>
-      </div>
+    <div class="mb-3">
+      <label class="form-label">日期</label>
+      <input type="text" class="form-control" [(ngModel)]="event.event_date" name="event_date" 
+             placeholder="格式: YYYY-MM-DD (例如: 2024-01-15)" required>
+      <small class="form-text text-muted">请输入日期，格式: YYYY-MM-DD</small>
     </div>
 
     <div class="mb-3">
@@ -36,15 +28,10 @@
       <input type="text" class="form-control" [(ngModel)]="event.location" name="location" required>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">分类</label>
-      <input type="text" class="form-control" [(ngModel)]="event.category" name="category" required>
-    </div>
-
     <div class="row">
       <div class="col-md-6 mb-3">
         <label class="form-label">票价 ($)</label>
-        <input type="number" class="form-control" [(ngModel)]="event.price" name="price" min="0" required>
+        <input type="number" class="form-control" [(ngModel)]="event.ticket_price" name="ticket_price" min="0" required>
       </div>
       <div class="col-md-6 mb-3">
         <label class="form-label">可用票数</label>
@@ -52,32 +39,11 @@
       </div>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">状态</label>
-      <select class="form-control" [(ngModel)]="event.status" name="status">
-        <option value="active">进行中</option>
-        <option value="past">已结束</option>
-        <option value="suspended">已暂停</option>
-      </select>
-    </div>
-
     <div class="btn-group">
       <button type="submit" class="btn btn-primary" [disabled]="loading">
         {{ loading ? '保存中...' : (isEdit ? '更新' : '创建') }}
       </button>
       <button type="button" class="btn btn-secondary" routerLink="/events">取消</button>
-    </div>
-
-    <!-- 测试按钮移到表单外面，避免嵌套问题 -->
-    <div class="mt-3" *ngIf="isEdit">
-      <button type="button" class="btn btn-info me-2" 
-              (click)="testMinimalUpdate()" [disabled]="loading">
-        测试更新
-      </button>
-      <button type="button" class="btn btn-warning" 
-              (click)="testTitleUpdate()" [disabled]="loading">
-        只更新标题
-      </button>
     </div>
   </form>
 </div>

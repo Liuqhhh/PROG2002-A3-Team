@@ -29,14 +29,11 @@
           <h5 class="card-title">{{ event.title }}</h5>
           <p class="card-text">{{ event.description }}</p>
           
-          <p><strong>日期:</strong> {{ event.date || '无日期信息' }} {{ event.time || '无时间信息' }}</p>
+          <!-- 修复属性名 -->
+          <p><strong>日期:</strong> {{ event.event_date || '无日期信息' }}</p>
           <p><strong>地点:</strong> {{ event.location }}</p>
-          <p><strong>票价:</strong> ${{ event.price || 0 }}</p>
-          <p><strong>状态:</strong> 
-            <span [class]="getStatusClass(event.status)">
-              {{ getStatusText(event.status) }}
-            </span>
-          </p>
+          <p><strong>票价:</strong> ${{ event.ticket_price || 0 }}</p>
+          <p><strong>可用票数:</strong> {{ event.available_tickets || 0 }}</p>
           
           <div class="btn-group">
             <button class="btn btn-warning btn-sm" [routerLink]="['/events/edit', event.id]">编辑</button>
