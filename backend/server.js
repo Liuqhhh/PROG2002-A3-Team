@@ -13,9 +13,9 @@ app.use(express.json());
 // 创建数据库连接池
 const pool = mysql.createPool({
   host: 'localhost',
-  user: 'root',
-  password: '143511', 
-  database: 'prog2002_a3',
+  user: 'hwang64_Web2_A3',
+  password: 'Lqh040413.', 
+  database: 'hwang64_Web2_A3',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
