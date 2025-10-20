@@ -1,0 +1,78 @@
+<!-- src/app/components/search/search.component.html -->
+<section class="search-form">
+  <h2>Find Charity Events</h2>
+  <p>Search for events that match your interests and availability</p>
+  
+  <form (ngSubmit)="onSearch()" #searchForm="ngForm">
+    <div class="form-group">
+      <label for="category">Event Category:</label>
+      <select id="category" name="category" [(ngModel)]="searchFilters.category">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" [(ngModel)]="searchFilters.location" 
+             placeholder="Enter city, venue, or area">
+    </div>
+    
+    <div class="form-group">
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" [(ngModel)]="searchFilters.date">
+    </div>
+    
+    <div class="form-buttons">
+      <button type="submit" class="btn">🔍 Search Events</button>
+      <button type="button" (click)="clearFilters()" class="btn btn-secondary">🗑️ Clear Filters</button>
+    </div>
+  </form>
+</section>
+
+<section class="search-results">
+  <h3>Search Results</h3>
+  
+  <div *ngIf="isLoading" class="loading">
+    <p>Loading events...</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div *ngIf="filteredEvents.length === 0 && events.length > 0" class="no-results">
+      <h4>No Events Found</h4>
+      <p>No events match your search criteria. Try adjusting your filters.</p>
+      <button (click)="clearFilters()" class="btn">Clear Filters</button>
+    </div>
+
+    <div *ngIf="filteredEvents.length === 0 && events.length === 0" class="search-placeholder">
+      <h4>Ready to Search</h4>
+      <p>Use the search form above to find charity events that match your interests.</p>
+      <p>You can filter by category, location, or specific date.</p>
+    </div>
+
+    <div *ngIf="filteredEvents.length > 0">
+      <div class="results-header">
+        <h4>Found {{ filteredEvents.length }} Event(s)</h4>
+      </div>
+      <div class="events-grid">
+        <div *ngFor="let event of filteredEvents" class="event-card">
+          <div class="event-header">
+            <h4><a [routerLink]="['/event', event.id]">{{ event.name }}</a></h4>
+            <span class="event-category">{{ event.category_name || event.category || 'General' }}</span>
+          </div>
+          <p><strong>📅 Date:</strong> {{ formatDate(event.date) }}</p>
+          <p><strong>📍 Location:</strong> {{ event.location }}</p>
+          <p><strong>🎯 Category:</strong> {{ event.category_name || event.category || 'General' }}</p>
+          <div class="event-purpose">
+            <p><strong>Purpose:</strong> {{ event.purpose || 'Supporting charitable causes' }}</p>
+          </div>
+          <p>{{ event.description || 'No description available' }}</p>
+          <p class="ticket-price"><strong>💰 Ticket Price:</strong> {{ formatCurrency(event.ticket_price) }}</p>
+          <a [routerLink]="['/event', event.id]" class="view-details-btn">View Details & Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

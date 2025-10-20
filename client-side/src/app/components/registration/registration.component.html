@@ -1,0 +1,123 @@
+<!-- src/app/components/registration/registration.component.html -->
+<section class="search-form">
+  <h2>Event Registration</h2>
+  <p>Complete your registration for the charity event</p>
+</section>
+
+<div *ngIf="!showSuccess">
+  <div class="registration-container">
+    <div class="event-details">
+      <div class="event-header">
+        <h3>Event Information</h3>
+      </div>
+      
+      <div *ngIf="isLoading" class="loading">
+        <p>Loading event information...</p>
+      </div>
+
+      <div *ngIf="!isLoading && event" class="event-meta">
+        <div class="info-item">
+          <strong>Event Name:</strong>
+          <span id="event-name">{{ event.name }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Date & Time:</strong>
+          <span id="event-date">{{ formatDate(event.date) }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Location:</strong>
+          <span id="event-location">{{ event.location }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Ticket Price:</strong>
+          <span class="ticket-price" id="event-price">{{ ticketPrice | currency }}</span>
+        </div>
+      </div>
+      
+      <div *ngIf="!isLoading && event" class="event-description">
+        <p id="event-description">{{ event.description }}</p>
+      </div>
+    </div>
+
+    <div class="search-form">
+      <h3>Registration Form</h3>
+      
+      <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
+        <div class="form-group">
+          <label for="fullName">Full Name *</label>
+          <input type="text" id="fullName" name="fullName" 
+                 [(ngModel)]="registrationData.fullName" 
+                 required placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" 
+                 [(ngModel)]="registrationData.email" 
+                 required placeholder="Enter your email address">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" 
+                 [(ngModel)]="registrationData.phone" 
+                 placeholder="Enter your phone number">
+        </div>
+
+        <div class="form-group">
+          <label for="ticketCount">Number of Tickets *</label>
+          <select id="ticketCount" name="ticketCount" 
+                  [(ngModel)]="registrationData.ticketCount" 
+                  (change)="onTicketCountChange()" required>
+            <option value="">Please select</option>
+            <option [value]="1">1 Ticket - {{ ticketPrice | currency }}</option>
+            <option [value]="2">2 Tickets - {{ ticketPrice * 2 | currency }}</option>
+            <option [value]="3">3 Tickets - {{ ticketPrice * 3 | currency }}</option>
+            <option [value]="4">4 Tickets - {{ ticketPrice * 4 | currency }}</option>
+            <option [value]="5">5 Tickets - {{ ticketPrice * 5 | currency }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="specialRequirements">Special Requirements</label>
+          <textarea id="specialRequirements" name="specialRequirements" 
+                    [(ngModel)]="registrationData.specialRequirements"
+                    rows="3" placeholder="Please mention any dietary restrictions or special needs"></textarea>
+        </div>
+
+        <div class="total-amount">
+          <strong>Total Amount: {{ totalAmount | currency }}</strong>
+        </div>
+
+        <div class="form-buttons">
+          <button type="submit" class="btn" [disabled]="isSubmitting">
+            {{ isSubmitting ? '⏳ Processing...' : '🎟️ Submit Registration' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="goBackToEvent()">← Back to Event</button>
+          <button type="button" class="btn btn-secondary" (click)="goToHome()">🏠 Homepage</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showSuccess" class="success-message">
+  <h3>🎉 Registration Successful!</h3>
+  <p>Thank you for registering! We've sent a confirmation email to your address.</p>
+  <div *ngIf="event" class="registration-details">
+    <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #0ea5e9;">
+      <p><strong>Registration Details:</strong></p>
+      <p><strong>Event:</strong> {{ event.name }}</p>
+      <p><strong>Date & Time:</strong> {{ formatDate(event.date) }}</p>
+      <p><strong>Location:</strong> {{ event.location }}</p>
+      <p><strong>Tickets:</strong> {{ registrationData.ticketCount }}</p>
+      <p><strong>Total Amount:</strong> {{ totalAmount | currency }}</p>
+      <p><strong>Confirmation ID:</strong> {{ generateRegistrationId() }}</p>
+    </div>
+    <p><em>Please bring your confirmation ID and a valid ID to the event.</em></p>
+  </div>
+  <div class="form-buttons">
+    <button (click)="goToHome()" class="btn">Return to Homepage</button>
+    <button (click)="goToSearch()" class="btn btn-secondary">Find More Events</button>
+  </div>
+</div>

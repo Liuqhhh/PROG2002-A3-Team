@@ -1,0 +1,97 @@
+<!-- src/app/components/event-details/event-details.component.html -->
+<div *ngIf="isLoading" class="loading-state">
+  <div class="loading-spinner"></div>
+  <p>Loading event details...</p>
+</div>
+
+<div *ngIf="error && !isLoading" class="error-message">
+  <h3>Error Loading Event</h3>
+  <p>{{ error }}</p>
+  <div style="margin-top: 1rem;">
+    <a routerLink="/" class="btn">← Back to Home</a>
+    <a routerLink="/search" class="btn btn-secondary">🔍 Find Other Events</a>
+  </div>
+</div>
+
+<div *ngIf="event && !isLoading" class="event-details">
+  <div class="event-details-container">
+    <div class="event-header">
+      <h1>{{ event.name }}</h1>
+      <div class="event-meta">
+        <span class="event-category">{{ event.category_name || event.category || 'General' }}</span>
+        <span class="event-status upcoming">Upcoming</span>
+      </div>
+    </div>
+    
+    <div class="event-content">
+      <div class="info-section">
+        <h3>Event Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <strong>Date & Time:</strong>
+            <span>{{ formatDate(event.date) }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Location:</strong>
+            <span>{{ event.location }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Organizer:</strong>
+            <span>{{ event.organizer || 'Charity Events Organization' }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Contact Email:</strong>
+            <span>{{ event.contact_email || 'contact@charityevents.org' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="event-sidebar">
+        <div class="ticket-info">
+          <h3>Ticket Information</h3>
+          <div class="ticket-price">
+            <span class="price">{{ formatCurrency(event.ticket_price) }}</span>
+            <span *ngIf="event.ticket_price === 0" class="free-badge">FREE</span>
+          </div>
+          <p class="ticket-note">All proceeds go to charitable causes</p>
+        </div>
+        
+        <div *ngIf="event.goal_amount" class="fundraising-info">
+          <h3>Fundraising Progress</h3>
+          <div class="goal-progress">
+            <div class="progress-stats">
+              <span>Raised: {{ formatCurrency(event.progress_amount || 0) }}</span>
+              <span>Goal: {{ formatCurrency(event.goal_amount) }}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="calculateProgressPercentage()"></div>
+            </div>
+            <div class="progress-percentage">
+              {{ calculateProgressPercentage() | number:'1.0-0' }}% Funded
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="event.purpose" class="info-section">
+      <h3>Event Purpose</h3>
+      <p>{{ event.purpose }}</p>
+    </div>
+    
+    <div *ngIf="event.description" class="info-section">
+      <h3>Description</h3>
+      <p>{{ event.description }}</p>
+    </div>
+  </div>
+  
+  <div class="registration-section">
+    <button (click)="onRegister()" class="btn register-btn">🎟️ Register for this Event</button>
+    <p class="registration-note">By registering, you agree to support this charitable cause</p>
+  </div>
+
+  <div class="navigation-actions">
+    <a routerLink="/" class="btn btn-secondary">← Back to Home</a>
+    <a routerLink="/search" class="btn">🔍 Find More Events</a>
+  </div>
+</div>

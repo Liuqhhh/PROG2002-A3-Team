@@ -1,0 +1,64 @@
+<!-- src/app/components/home/home.component.html -->
+<section class="hero">
+  <h2>Make a Difference Together</h2>
+  <p>Join our charity events and support meaningful causes in your community. Every participation counts!</p>
+</section>
+
+<section class="organization-info">
+  <h3>About Our Organization</h3>
+  <p>We are a non-profit organization dedicated to creating positive change through community events and fundraising activities. Our mission is to connect people with causes they care about and make giving back an enjoyable experience.</p>
+  <div class="contact-info">
+    <p><strong>📍 Address:</strong> 123 Charity Street, Community City</p>
+    <p><strong>📞 Phone:</strong> (555) 123-4567</p>
+    <p><strong>✉️ Email:</strong> contact&#64;charityevents.org</p>
+    <p><strong>🌐 Website:</strong> www.charityevents.org</p>
+  </div>
+</section>
+
+<section class="events-section">
+  <h3>Upcoming Charity Events</h3>
+  
+  <div *ngIf="isLoading" class="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading events...</p>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="error-message">
+    <h3>Unable to Load Events</h3>
+    <p>{{ error }}</p>
+    <button (click)="reloadEvents()" class="btn">🔄 Retry</button>
+  </div>
+
+  <div *ngIf="events.length === 0 && !isLoading && !error" class="no-events">
+    <h3>No Upcoming Events</h3>
+    <p>There are currently no upcoming charity events. Please check back later for new events!</p>
+    <p>You can also check our <a routerLink="/search" style="color: #2563eb;">search page</a> for all events.</p>
+  </div>
+
+  <div *ngIf="events.length > 0 && !isLoading" class="events-grid">
+    <div *ngFor="let event of events" class="event-card">
+      <div class="event-header">
+        <h3><a [routerLink]="['/event', event.id]">{{ event.name }}</a></h3>
+        <span class="event-category">{{ event.category_name || event.category || 'General' }}</span>
+      </div>
+      
+      <div class="event-info">
+        <p><strong>📅 Date:</strong> {{ formatDate(event.date) }}</p>
+        <p><strong>📍 Location:</strong> {{ event.location }}</p>
+        <p><strong>💰 Ticket Price:</strong> {{ formatCurrency(event.ticket_price) }}</p>
+      </div>
+      
+      <div class="event-purpose">
+        <p><strong>🎯 Purpose:</strong> {{ event.purpose || 'Supporting charitable causes' }}</p>
+      </div>
+      
+      <div class="event-description">
+        <p>{{ event.description || 'No description available' }}</p>
+      </div>
+      
+      <div class="event-actions">
+        <a [routerLink]="['/event', event.id]" class="btn">View Details & Register</a>
+      </div>
+    </div>
+  </div>
+</section>
